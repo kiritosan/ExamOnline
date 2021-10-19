@@ -1,10 +1,10 @@
 <template>
 	<v-app>
-		<v-main
-			class="mx-auto mt-10"
-			max-width="344"
-		>
-			<v-card flat>
+		<v-main class="mx-auto mt-10">
+			<v-card
+				flat
+				min-width="334"
+			>
 				<v-card-title class="text-center flex-column  align-center">
 					<v-avatar size="56">
 						<img
@@ -13,7 +13,7 @@
 						>
 					</v-avatar>
 					<h1 class="font-weight-light text-h6 basil--text mt-4 ">
-						Join OnlineExam
+						Sign in to OnlineExam
 					</h1>
 				</v-card-title>
 			</v-card>
@@ -41,7 +41,7 @@
 						ref="form"
 						v-model="valid"
 						lazy-validation
-						class="mx-6"
+						class="mx-6 mt-6"
 					>
 						<v-text-field
 							v-model="account"
@@ -55,29 +55,17 @@
 							v-model="password"
 							:append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
 							:rules="passwordRules"
-							label="Enter your password"
+							label="Enter your password."
 							:type="show ? 'text' : 'password'"
 							@click:append="show = !show"
 							required
 						></v-text-field>
 
-						<v-text-field
-							v-model="passwordAgain"
-							:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-							:rules="passwordRules"
-							label="Enter your password again"
-							:type="show1 ? 'text' : 'password'"
-							@click:append="show1 = !show1"
-							required
-						></v-text-field>
-
 						<v-checkbox
 							v-model="checkbox"
-							:rules="[v => !!v || 'You must agree to continue!']"
-							label="Do you agree?"
+							label="Remember the password"
 							required
 						></v-checkbox>
-
 						<div class="justify-center d-flex my-4">
 							<v-btn
 								:disabled="!valid"
@@ -105,7 +93,7 @@
 				outlined
 				class="mt-4"
 			>
-				<v-card-text>New to OnlineExam? <a href="/setup">create an account.</a></v-card-text>
+				<v-card-text class="text-center">New to OnlineExam? <a href="/setup">create an account.</a></v-card-text>
 			</v-card>
 		</v-main>
 	</v-app>
