@@ -13,7 +13,7 @@
 						>
 					</v-avatar>
 					<h1 class="font-weight-light text-h6 basil--text mt-4 ">
-						Sign in to OnlineExam
+						登陆考试系统
 					</h1>
 				</v-card-title>
 			</v-card>
@@ -47,7 +47,7 @@
 							v-model="account"
 							:counter="20"
 							:rules="accountRules"
-							label="Enter your email."
+							label="请输入账号"
 							required
 						></v-text-field>
 
@@ -55,7 +55,7 @@
 							v-model="password"
 							:append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
 							:rules="passwordRules"
-							label="Enter your password."
+							label="请输入密码"
 							:type="show ? 'text' : 'password'"
 							@click:append="show = !show"
 							required
@@ -63,7 +63,7 @@
 
 						<v-checkbox
 							v-model="checkbox"
-							label="Remember the password"
+							label="记住密码"
 							required
 						></v-checkbox>
 						<div class="justify-center d-flex my-4">
@@ -73,7 +73,7 @@
 								class="mr-4"
 								@click="validate"
 							>
-								Sign in
+								登录
 							</v-btn>
 
 							<v-btn
@@ -81,7 +81,7 @@
 								class="mr-4"
 								@click="reset"
 							>
-								Reset
+								重置
 							</v-btn>
 						</div>
 					</v-form>
@@ -93,7 +93,7 @@
 				outlined
 				class="mt-4"
 			>
-				<v-card-text class="text-center">New to OnlineExam? <a href="/setup">create an account.</a></v-card-text>
+				<v-card-text class="text-center">没有帐户？ <a href="/regist">现在去创建。</a></v-card-text>
 			</v-card>
 		</v-main>
 	</v-app>
@@ -106,19 +106,19 @@ export default {
 		return {
 			tab: null,
 			show: false,
-			items: ['student', 'teacher'],
+			items: ['我是学生', '我是老师'],
 			valid: true,
 			account: '',
 			accountRules: [
-				(v) => !!v || 'account is required',
-				(v) => /^.+@.+\.com$/.test(v) || "mailbox's format wrong.",
-				(v) => (v && v.length <= 20) || 'length limited to 6~20.',
+				(v) => !!v || '账号不能为空',
+				(v) => /^[ts]\d+$/.test(v) || '账号格式不正确',
 			],
 			password: '',
 			passwordRules: [
-				(v) => !!v || 'Password is required',
+				(v) => !!v || '密码不能为空',
 				(v) =>
-					(v && v.length >= 6 && v.length <= 20) || 'length limited to 6~20.',
+					/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test(v) ||
+					'密码至少包含 数字和英文，长度8~20',
 			],
 			checkbox: false,
 		}
