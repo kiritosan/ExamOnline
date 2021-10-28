@@ -1,171 +1,206 @@
 <template>
 	<v-app>
 		<v-main class="mx-auto mt-10">
-			<v-card
-				flat
-				min-width="334"
-			>
-				<v-card-title class="text-center flex-column  align-center">
-					<v-avatar size="56">
-						<img
-							alt="Avatar"
-							src="../../../assets/img/avatar.png"
-						>
-					</v-avatar>
-					<h1 class="font-weight-light text-h6 basil--text mt-4 ">
-						考试系统注册
-					</h1>
-				</v-card-title>
-			</v-card>
-
-			<v-card
-				flat
-				outlined
-			>
-				<v-tabs
-					v-model="tab"
-					fixed-tabs
+			<div v-if="reveal">
+				<v-card
+					flat
+					min-width="334"
 				>
-					<v-tabs-slider color="bg_success"></v-tabs-slider>
-					<v-tab
-						v-for="item in items"
-						:key="item"
-						active-class="cuifan"
-					>
-						{{ item }}
-					</v-tab>
-				</v-tabs>
-
-				<v-tabs-items v-model="tab">
-					<v-form
-						ref="form"
-						v-model="valid"
-						lazy-validation
-						class="mx-6 mt-6"
-					>
-
-						<v-text-field
-							v-model="name"
-							:rules="nameRules"
-							label="姓名"
-							required
-						></v-text-field>
-
-						<div>
-							<v-row>
-								<v-col cols="7">
-									<v-radio-group
-										v-model="sex"
-										row
-									>
-										<span style="color:#666">性别：</span>
-										<v-radio
-											label="男"
-											value="m"
-										></v-radio>
-										<v-radio
-											label="女"
-											value="w"
-										></v-radio>
-									</v-radio-group>
-								</v-col>
-								<v-col cols="5">
-									<v-select
-										style="width:200px"
-										:items="institutes"
-										v-model="coid"
-										label="所在学院"
-										class="mt-3"
-										dense
-										outlined
-										max-width="160"
-									></v-select>
-								</v-col>
-							</v-row>
-						</div>
-
-						<v-text-field
-							v-model="phone"
-							:counter="11"
-							:rules="phoneRules"
-							label="手机号"
-							required
-						></v-text-field>
-
-						<v-text-field
-							v-model="email"
-							:rules="emailRules"
-							label="邮箱"
-							required
-						></v-text-field>
-
-						<v-text-field
-							v-model="password"
-							:append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-							:rules="passwordRules"
-							label="密码"
-							:type="show ? 'text' : 'password'"
-							@click:append="show = !show"
-							required
-						></v-text-field>
-
-						<v-text-field
-							v-model="password1"
-							:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-							:rules="passwordRules1"
-							label="确认密码"
-							:type="show1 ? 'text' : 'password'"
-							@click:append="show1 = !show1"
-							required
-						></v-text-field>
-
-						<v-checkbox
-							v-model="agreeTreaty"
-							:rules="[v => !!v || '该项必须勾选']"
-							label="我同意注册条约"
-							required
-						></v-checkbox>
-
-						<div class="justify-center d-flex my-4">
-							<v-btn
-								:disabled="!valid"
-								color="success"
-								class="mr-4"
-								@click="validate"
+					<v-card-title class="text-center flex-column  align-center">
+						<v-avatar size="56">
+							<img
+								alt="Avatar"
+								src="../../../assets/img/avatar.png"
 							>
-								注册
-							</v-btn>
+						</v-avatar>
+						<h1 class="font-weight-light text-h6 basil--text mt-4 ">
+							考试系统注册
+						</h1>
+					</v-card-title>
+				</v-card>
 
-							<v-btn
-								color="error"
-								class="mr-4"
-								@click="reset"
+				<v-card
+					flat
+					outlined
+				>
+					<v-tabs
+						v-model="tab"
+						fixed-tabs
+					>
+						<v-tabs-slider color="bg_success"></v-tabs-slider>
+						<v-tab
+							v-for="item in items"
+							:key="item"
+							active-class="cuifan"
+						>
+							{{ item }}
+						</v-tab>
+					</v-tabs>
+
+					<v-tabs-items v-model="tab">
+						<v-form
+							ref="form"
+							v-model="valid"
+							lazy-validation
+							class="mx-6 mt-6"
+						>
+
+							<v-text-field
+								v-model="name"
+								:rules="nameRules"
+								label="姓名"
+								required
+							></v-text-field>
+
+							<div>
+								<v-row>
+									<v-col cols="7">
+										<v-radio-group
+											v-model="sex"
+											row
+										>
+											<span style="color:#666">性别：</span>
+											<v-radio
+												label="男"
+												value="m"
+											></v-radio>
+											<v-radio
+												label="女"
+												value="w"
+											></v-radio>
+										</v-radio-group>
+									</v-col>
+									<v-col cols="5">
+										<v-select
+											style="width:200px"
+											:items="institutes"
+											v-model="coid"
+											label="所在学院"
+											class="mt-3"
+											dense
+											outlined
+											max-width="160"
+										></v-select>
+									</v-col>
+								</v-row>
+							</div>
+
+							<v-text-field
+								v-model="phone"
+								:counter="11"
+								:rules="phoneRules"
+								label="手机号"
+								required
+							></v-text-field>
+
+							<v-text-field
+								v-model="email"
+								:rules="emailRules"
+								label="邮箱"
+								required
+							></v-text-field>
+
+							<v-text-field
+								v-model="password"
+								:append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+								:rules="passwordRules"
+								label="密码"
+								:type="show ? 'text' : 'password'"
+								@click:append="show = !show"
+								required
+							></v-text-field>
+
+							<v-text-field
+								v-model="password1"
+								:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+								:rules="passwordRules1"
+								label="确认密码"
+								:type="show1 ? 'text' : 'password'"
+								@click:append="show1 = !show1"
+								required
+							></v-text-field>
+
+							<v-checkbox
+								v-model="agreeTreaty"
+								:rules="[v => !!v || '该项必须勾选']"
+								label="我同意注册条约"
+								required
 							>
-								重置
-							</v-btn>
-						</div>
-					</v-form>
-				</v-tabs-items>
-			</v-card>
-			<v-card
-				flat
-				outlined
-				class="mt-4"
-			>
-				<v-card-text class="text-center">已有账户？ <a href="/login">去登录。</a></v-card-text>
-			</v-card>
+							</v-checkbox>
+
+							<div class="justify-center d-flex my-4">
+								<v-btn
+									:disabled="!valid"
+									color="success"
+									class="mr-4"
+									@click="validate"
+								>
+									注册
+								</v-btn>
+
+								<v-btn
+									color="error"
+									class="mr-4"
+									@click="reset"
+								>
+									重置
+								</v-btn>
+
+								<v-btn
+									color="error"
+									class="mr-4"
+									@click="test"
+								>
+									测试
+								</v-btn>
+							</div>
+						</v-form>
+					</v-tabs-items>
+				</v-card>
+				<v-card
+					flat
+					outlined
+					class="mt-4"
+				>
+					<v-card-text class="text-center">已有账户？ <a href="/login">去登录。</a></v-card-text>
+
+				</v-card>
+			</div>
+			<div v-else>
+				<v-card>
+					<v-card-title>为您分配的账号为：<span class="account">{{account}}</span> &nbsp;, 请牢记哦~</v-card-title>
+
+					<v-card-actions class="d-flex justify-center">
+						<v-btn
+							@click="toLogin"
+							color="success"
+							class="mr-4"
+						>
+							去登录
+						</v-btn>
+						<v-btn
+							color="success"
+							class="mr-4"
+							@click="toRegist"
+						>
+							重新注册
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</div>
 		</v-main>
-
 	</v-app>
 
 </template>
 
 <script>
-import axios from 'axios'
 import { tregist, sregist } from '@/api/Login'
 export default {
 	data() {
 		return {
+			// 注册成功账号显示
+			reveal: true,
+			account: '123456',
 			// 表单数据
 			name: '',
 			sex: 'm',
@@ -217,11 +252,11 @@ export default {
 		validate() {
 			// 验证表单
 			this.$refs.form.validate()
-
+			console.log(1)
 			if (this.tab === 0) {
 				// 学生注册
 				let query = {
-					snum: this.name,
+					sname: this.name,
 					ssex: this.sex,
 					sphone: this.phone,
 					coid: this.institutes.findIndex(
@@ -230,27 +265,66 @@ export default {
 					psw: this.password,
 					email: this.email,
 				}
-				sregist(query).then((res) => {
-					console.log(res)
-				})
+				sregist(query)
+					.then((res) => {
+						// 后端接口出现问题
+						if (res.data.state === false) {
+							return
+						}
+						console.log(res)
+						this.account = res.data
+						this.$message({
+							type: 'success',
+							message: '注册成功',
+						})
+						this.reveal = false
+					})
+					.catch(() => {
+						this.$message({
+							type: 'error',
+							message: '注册失败',
+						})
+					})
 			} else if (this.tab === 1) {
+				// 老师注册
 				let query = {
-					tnum: this.name,
+					tname: this.name,
 					tsex: this.sex,
 					tphone: this.phone,
-					tcoid: this.institutes.findIndex(
+					coid: this.institutes.findIndex(
 						(institute) => institute === this.coid
 					),
 					psw: this.password,
 					email: this.email,
 				}
 				tregist(query).then((res) => {
+					if (res.data.state === false) {
+						return
+					}
 					console.log(res)
+					this.account = res.data
+					this.reveal = false
+					this.$message({
+						type: 'success',
+						message: '注册成功',
+					})
+
+					this.reveal = false
 				})
 			}
 		},
+
 		reset() {
 			this.$refs.form.reset()
+		},
+		test() {
+			this.reveal = false
+		},
+		toLogin() {
+			window.location.href = window.location.origin + '/login'
+		},
+		toRegist() {
+			window.location.href = window.location.origin + '/regist'
 		},
 	},
 }
@@ -259,5 +333,8 @@ export default {
 <style>
 .cuifan {
 	color: #2da44e !important;
+}
+.account {
+	color: aqua;
 }
 </style>

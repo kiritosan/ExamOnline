@@ -101,25 +101,35 @@
 </template>
 
 <script>
+import { tlogin, slogin } from '@/api/Login'
 export default {
 	data() {
 		return {
+			// tab栏切换
 			tab: null,
-			show: false,
 			items: ['我是学生', '我是老师'],
+
+			// 控制密码显示隐藏
+			show: false,
 			valid: true,
+
+			// 账号密码
 			account: '',
+			password: '',
+
+			// 账户合法性校验
 			accountRules: [
 				(v) => !!v || '账号不能为空',
 				(v) => /^[ts]\d+$/.test(v) || '账号格式不正确',
 			],
-			password: '',
 			passwordRules: [
 				(v) => !!v || '密码不能为空',
 				(v) =>
 					/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test(v) ||
 					'密码至少包含 数字和英文，长度8~20',
 			],
+
+			// 记住密码
 			checkbox: false,
 		}
 	},
@@ -127,6 +137,23 @@ export default {
 	methods: {
 		validate() {
 			this.$refs.form.validate()
+			if (this.tab === 0) {
+				// 学生登录
+				let query = {
+					snum: this.account,
+					psw: this.password,
+				}
+				console.log(query)
+				slogin(query).then((res) => {
+					console.log(res)
+				})
+			} else if (this.tab === 1) {
+				// 老师登录
+				let query = {
+					tnum: this.account,
+					pwd: this.password,
+				}
+			}
 		},
 		reset() {
 			this.$refs.form.reset()

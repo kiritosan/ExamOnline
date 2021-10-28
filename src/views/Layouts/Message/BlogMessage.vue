@@ -6,14 +6,7 @@
 			top
 			:color="color"
 		>
-			{{ message }}
-			<v-btn
-				color="blue"
-				text
-				@click="visible = false"
-			>
-				Close
-			</v-btn>
+			<div class="wrap">{{message}}</div>
 		</v-snackbar>
 	</div>
 </template>
@@ -44,4 +37,9 @@ export default {
 	},
 }
 </script>
+<style  scoped>
+.wrap {
+	text-align: center !important;
+}
+</style>
 
