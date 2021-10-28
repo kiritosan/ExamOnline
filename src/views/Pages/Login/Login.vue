@@ -9,7 +9,7 @@
 					<v-avatar size="56">
 						<img
 							alt="Avatar"
-							src="../../../assets/img/avatar.png"
+							src="/images/avatar.png"
 						>
 					</v-avatar>
 					<h1 class="font-weight-light text-h6 basil--text mt-4 ">
@@ -45,7 +45,6 @@
 					>
 						<v-text-field
 							v-model="account"
-							:counter="20"
 							:rules="accountRules"
 							label="请输入账号"
 							required
@@ -62,10 +61,11 @@
 						></v-text-field>
 
 						<v-checkbox
-							v-model="checkbox"
+							v-model="checked"
 							label="记住密码"
 							required
 						></v-checkbox>
+
 						<div class="justify-center d-flex my-4">
 							<v-btn
 								:disabled="!valid"
@@ -93,7 +93,14 @@
 				outlined
 				class="mt-4"
 			>
-				<v-card-text class="text-center">没有帐户？ <a href="/regist">现在去创建。</a></v-card-text>
+				<v-card-text class="text-center">新用户？<a
+						href="/regist"
+						style="color:#58d8cb!important"
+					>去注册。</a><span class="mx-3"></span> 忘记密码？<a
+						href="/updatePsw"
+						style="color:#58d8cb!important"
+					>去找回。</a>
+				</v-card-text>
 			</v-card>
 		</v-main>
 	</v-app>
@@ -102,6 +109,7 @@
 
 <script>
 import { tlogin, slogin } from '@/api/Login'
+import { data } from '../../../../../../materials/front-end/18-Vue/Vue笔记/Day 01/Vue源码/vue-2.5.21/test/weex/cases/event/click.vue'
 export default {
 	data() {
 		return {
@@ -130,40 +138,70 @@ export default {
 			],
 
 			// 记住密码
-			checkbox: false,
+			checked: false,
 		}
 	},
-
+	created() {
+		this.getCookie()
+	},
 	methods: {
-		validate() {
-			this.$refs.form.validate()
-			if (this.tab === 0) {
-				// 学生登录
-				let query = {
-					snum: this.account,
-					psw: this.password,
-				}
-				console.log(query)
-				slogin(query).then((res) => {
-					console.log(res)
-				})
-			} else if (this.tab === 1) {
-				// 老师登录
-				let query = {
-					tnum: this.account,
-					pwd: this.password,
-				}
-			}
+		setCookie(name, psw, days) {
+			var exdate = new Date() // 获取时间
+			exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * days) // 保存的天数
+			// 字符串拼接cookie
+			window.document.cookie =
+				'userName' + '=' + name + ';path=/;expires=' + exdate.toGMTString()
+			window.document.cookie =
+				'userPsw' + '=' + psw + ';path=/;expires=' + exdate.toGMTString()
 		},
+		getCookie() {
+			if (!document.cookie) return
+			let str = document.cookie.split(';')
+			this.account = str[0].split('=')[1]
+			this.tab = this.account[0] === 't' ? 1 : 0
+			this.password = str[1].split('=')[1]
+			this.checked = true
+		},
+		validate() {
+			// 输入不合法
+			if (!this.$refs.form.validate()) return
+
+			let status = ['s', 't']
+			let query = {
+				[status[this.tab] + 'num']: this.account,
+				psw: this.password,
+			}
+			let login = [slogin, tlogin][this.tab]
+			login(query).then((res) => {
+				if (res.data.token) {
+					// 登录成功，保存token ---> 需不需要加密？
+					this.$message({
+						type: 'success',
+						message: '登录成功',
+					})
+					window.localStorage.setItem('token', res, data.token)
+					if (this.checked) {
+						console.log(this)
+						// 保存密码
+						this.setCookie(this.account, this.password, 7)
+					} else {
+						this.setCookie('', '', -1)
+					}
+					this.$router.push('/home')
+				}
+			})
+		},
+
+		// 重置表单
 		reset() {
 			this.$refs.form.reset()
 		},
 	},
+	// 保存密码
 }
 </script>
-
-<style>
+<style  scoped>
 .cuifan {
-	color: #2da44e !important;
+	color: #4bd5c7 !important;
 }
 </style>

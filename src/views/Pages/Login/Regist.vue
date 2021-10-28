@@ -10,7 +10,7 @@
 						<v-avatar size="56">
 							<img
 								alt="Avatar"
-								src="../../../assets/img/avatar.png"
+								src="/images/avatar.png"
 							>
 						</v-avatar>
 						<h1 class="font-weight-light text-h6 basil--text mt-4 ">
@@ -162,12 +162,15 @@
 					outlined
 					class="mt-4"
 				>
-					<v-card-text class="text-center">已有账户？ <a href="/login">去登录。</a></v-card-text>
+					<v-card-text class="text-center">已有账户？ <a
+							href="/login"
+							style="color:#58d8cb!important"
+						>去登录。</a></v-card-text>
 
 				</v-card>
 			</div>
 			<div v-else>
-				<v-card>
+				<v-card class="pb-4">
 					<v-card-title>为您分配的账号为：<span class="account">{{account}}</span> &nbsp;, 请牢记哦~</v-card-title>
 
 					<v-card-actions class="d-flex justify-center">
@@ -220,7 +223,7 @@ export default {
 			tab: '我是学生',
 			items: ['我是学生', '我是老师'],
 
-			// 重置表单
+			// 验证表单合法性
 			valid: true,
 
 			// 表单验证规则
@@ -234,11 +237,7 @@ export default {
 				(v) => /^\d+$/.test(v) || '电话号码必须为数字',
 				(v) => (v && v.length === 11) || '电话号码长度为11位',
 			],
-			emailRules: [
-				(v) => !!v || '邮箱不能为空',
-				(v) =>
-					/^[1-9]\d{4,10}@qq\.com$/.test(v) || '邮箱格式错误，目前仅支持QQ邮箱',
-			],
+
 			passwordRules: [
 				(v) => !!v || '密码不能为空',
 				(v) =>
@@ -250,68 +249,28 @@ export default {
 	},
 	methods: {
 		validate() {
-			// 验证表单
-			this.$refs.form.validate()
-			console.log(1)
-			if (this.tab === 0) {
-				// 学生注册
-				let query = {
-					sname: this.name,
-					ssex: this.sex,
-					sphone: this.phone,
-					coid: this.institutes.findIndex(
-						(institute) => institute === this.coid
-					),
-					psw: this.password,
-					email: this.email,
-				}
-				sregist(query)
-					.then((res) => {
-						// 后端接口出现问题
-						if (res.data.state === false) {
-							return
-						}
-						console.log(res)
-						this.account = res.data
-						this.$message({
-							type: 'success',
-							message: '注册成功',
-						})
-						this.reveal = false
-					})
-					.catch(() => {
-						this.$message({
-							type: 'error',
-							message: '注册失败',
-						})
-					})
-			} else if (this.tab === 1) {
-				// 老师注册
-				let query = {
-					tname: this.name,
-					tsex: this.sex,
-					tphone: this.phone,
-					coid: this.institutes.findIndex(
-						(institute) => institute === this.coid
-					),
-					psw: this.password,
-					email: this.email,
-				}
-				tregist(query).then((res) => {
-					if (res.data.state === false) {
-						return
-					}
-					console.log(res)
-					this.account = res.data
-					this.reveal = false
-					this.$message({
-						type: 'success',
-						message: '注册成功',
-					})
+			// 表单输入不合法
+			if (!this.$refs.form.validate()) return
+			let status = ['s', 't']
 
-					this.reveal = false
-				})
+			let query = {
+				[status[this.tab] + 'name']: this.name,
+				[status[this.tab] + 'sex']: this.sex,
+				[status[this.tab] + 'sphone']: this.phone,
+				coid: this.institutes.findIndex((institute) => institute === this.coid),
+				psw: this.password,
+				email: this.email,
 			}
+			let regist = [sregist, tregist][this.tab]
+			regist(query).then((res) => {
+				if (res.data.state === false) return
+				this.account = res.data
+				this.$message({
+					type: 'success',
+					message: '注册成功',
+				})
+				this.reveal = false
+			})
 		},
 
 		reset() {
@@ -321,10 +280,10 @@ export default {
 			this.reveal = false
 		},
 		toLogin() {
-			window.location.href = window.location.origin + '/login'
+			this.$router.push('/login')
 		},
 		toRegist() {
-			window.location.href = window.location.origin + '/regist'
+			this.$router.push('/regist')
 		},
 	},
 }
@@ -332,9 +291,9 @@ export default {
 
 <style>
 .cuifan {
-	color: #2da44e !important;
+	color: #4bd5c7 !important;
 }
 .account {
-	color: aqua;
+	color: #4bd5c7;
 }
 </style>

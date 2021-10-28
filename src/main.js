@@ -13,5 +13,3 @@ new Vue({
   vuetify,
   router
 }).$mount('#app')
-
-//注册全局提示组件

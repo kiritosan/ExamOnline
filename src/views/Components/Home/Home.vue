@@ -1,10 +1,25 @@
 <template>
-	<div>welcome</div>
+	<v-app>
+		<nav-bar></nav-bar>
+		<v-main class="grey lighten-4 ml-4 pr-4">
+			<router-view>
+			</router-view>
+		</v-main>
+	</v-app>
 </template>
 
 <script>
-export default {}
+import NavBar from '../../Layouts/NavBar/Navbar.vue'
+export default {
+	name: 'CuifanBase',
+	data() {
+		return {}
+	},
+	components: {
+		NavBar,
+	},
+}
 </script>
 
-<style>
+<style lang="scss" scoped>
 </style>
