@@ -37,7 +37,6 @@
 									sm="4"
 									md="2"
 								>
-
 								</v-col>
 							</v-row>
 						</v-card>
@@ -63,11 +62,48 @@
 								:items="subject.papers"
 								:search="subject.search"
 							>
-								<template v-slot:item.score={item}>
-									<v-chip color="success">最终成绩：100分</v-chip>
-								</template>
-								<template v-slot:item.action="{ item }">
+								<template v-slot:item.score="{item}">
+									<v-chip color="success">最终成绩：{{scores[0]?Math.max(...scores):0}}分</v-chip>
+									<v-dialog
+										v-model="item.dialog2"
+										width="500"
+										fullscreen
+									>
+										<template v-slot:activator="{ on, attrs }">
+											<v-chip
+												v-bind="attrs"
+												v-on="on"
+												color="error"
+												style="cursor:pointer"
+												class="ml-4"
+											>查看以往成绩</v-chip>
+										</template>
+										<v-card
+											max-width="400"
+											tile
+										>
+											<v-row style="height:130px"></v-row>
+											<v-row>
+												<v-col></v-col>
+												<v-col>
+													<v-subheader>历史成绩</v-subheader>
+													<v-list-item
+														v-for="(score,index) in scores"
+														:key="index"
+													>
+														<v-list-item-content>
+															<v-list-item-title>第{{index+1}}次成绩：{{score}}</v-list-item-title>
+														</v-list-item-content>
+													</v-list-item>
+												</v-col>
+												<v-col></v-col>
+											</v-row>
+										</v-card>
 
+									</v-dialog>
+								</template>
+
+								<template v-slot:item.action="{ item }">
 									<v-dialog
 										v-model="item.dialog"
 										fullscreen
@@ -81,9 +117,9 @@
 												color="success"
 												class="text-caption my-2 white--text "
 												style="border-radius:5px"
-												@click="checkPaper(item)"
+												@click="answerPaper(item)"
+												:disabled="answer"
 											>开始答题</v-btn>
-
 										</template>
 										<v-card>
 											<v-toolbar
@@ -103,7 +139,7 @@
 													<v-btn
 														dark
 														text
-														@click="answerPaper(item)"
+														@click="submitPaper(item)"
 													>
 														交卷
 													</v-btn>
@@ -144,9 +180,9 @@
 												color="error"
 												class="text-caption my-2 white--text mx-4"
 												style="border-radius:5px"
+												:disabled="answerAgain"
 												@click="answerPaperAgain(item)"
 											>重做</v-btn>
-
 										</template>
 										<v-card>
 											<v-toolbar
@@ -195,7 +231,7 @@
 									</v-dialog>
 
 									<v-dialog
-										v-model="item.dialog2"
+										v-model="item.dialog3"
 										fullscreen
 										hide-overlay
 										transition="dialog-bottom-transition"
@@ -207,7 +243,6 @@
 												color="primary"
 												class="text-caption my-2 white--text"
 												style="border-radius:5px"
-												@click="checkPaper(item)"
 											>查看试卷</v-btn>
 
 										</template>
@@ -219,7 +254,7 @@
 												<v-btn
 													icon
 													dark
-													@click="item.dialog2 = false"
+													@click="item.dialog3 = false"
 												>
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
@@ -245,9 +280,7 @@
 											</v-row>
 										</v-card>
 									</v-dialog>
-
 								</template>
-
 							</v-data-table>
 						</v-card>
 					</v-expansion-panel-content>
@@ -273,7 +306,9 @@ export default {
 	data() {
 		return {
 			name: '', // 学生名字
-			account: '',
+			account: '', // 学生账号
+
+			// 全部课程
 			subjects: [
 				{
 					course: '数据结构',
@@ -281,6 +316,7 @@ export default {
 					due: getTime(),
 					person: 'simon',
 					status: 'ongoing',
+					// 该课程下所有的试卷
 					papers: [
 						{
 							pid: 0,
@@ -301,9 +337,8 @@ export default {
 					search: '',
 				},
 			],
-			attrs: true,
-			valid: true,
-			valid1: true,
+
+			// 试卷表格头部
 			headers: [
 				{
 					text: '试卷编号',
@@ -316,28 +351,25 @@ export default {
 				{ text: '操作', value: 'action' },
 				{ text: '成绩', value: 'score' },
 			],
-			pdescribeRules: [(v) => !!v || '描述信息不能为空！'],
-			notifications: false,
-			sound: true,
-			widgets: false,
-			optionA: '',
-			optionB: '',
-			optionC: '',
-			optionD: '',
-			optionRules: [(v) => !!v || '内容不能为空'],
-			tab: 0,
-			items: ['选择题', '填空题'],
-			qcontent: '',
-			qanswer: '',
-			qnum: 1,
-			pid: '',
-			questions: [],
+			questions: JSON.parse(
+				'[{"qid":562,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":1},{"qid":563,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":2},{"qid":564,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":3},{"qid":565,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":4},{"qid":566,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":5},{"qid":567,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":6},{"qid":568,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":7},{"qid":569,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":8},{"qid":570,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":9},{"qid":571,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":10}]'
+			), // 全部试题内容
+			// 控制再次答题按钮
+			answer: false,
+			answerAgain: true,
+			scores: [], // 保存每一次的成绩
 		}
 	},
 	computed: {},
 	created() {
-		// 获取老师/学生个人信息 ,flag：s学生 t老师
+		//获取本地试题
+		this.questions.forEach((question) => {
+			question['select'] = '' // 用户选择的答案
+			question['right'] = question.qanswer.split(';')[1].split('=')[1] // 正确的答案
+		})
+		// 获取学生个人信息
 		this.account = getUserAccount()
+
 		getStudentInfo({
 			snum: this.account,
 		})
@@ -349,58 +381,72 @@ export default {
 				})
 			})
 			.then((res) => {
-				console.log(res)
-				res.data.forEach((item) => {
-					this.subjects.push({
-						course: item.cname,
-						id: item.cid,
-						due: getTime(),
-						person: this.name,
-						status: 'ongoing',
-						papers: [],
-						search: '',
-					})
-				})
-
-				// 获取学生对应课程下的所有试卷
-				this.subjects.forEach((subject) => {
-					getStudentAllPapers({
-						cid: subject.id,
-						snum: this.account,
-					}).then((res) => {
-						// if (!res.data.msg) {
-						// 	subject.papers = JSON.parse(JSON.stringify(res.data))
-						// 	subject.papers.forEach((paper) => {
-						// 		paper['paperName'] = paper.pdescribe
-						// })
-						// }
-					})
-				})
+				// console.log(res)
+				// res.data.forEach((item) => {
+				// 	this.subjects.push({
+				// 		course: item.cname,
+				// 		id: item.cid,
+				// 		due: getTime(),
+				// 		person: this.name,
+				// 		status: 'ongoing',
+				// 		papers: [],
+				// 		search: '',
+				// 	})
+				// })
+				// // 获取学生对应课程下的所有试卷
+				// this.subjects.forEach((subject) => {
+				// 	getStudentAllPapers({
+				// 		cid: subject.id,
+				// 		snum: this.account,
+				// 	}).then((res) => {
+				// if (!res.data.msg) {
+				// 	subject.papers = JSON.parse(JSON.stringify(res.data))
+				// 	subject.papers.forEach((paper) => {
+				// 		paper['paperName'] = paper.pdescribe
+				// })
+				// }
+				// })
+				// })
 			})
 	},
 
 	methods: {
+		// 开始答题
 		answerPaper(item) {
-			getQuestions({
-				pid: item.pid,
-			}).then((res) => {
-				this.questions = res.data
-				this.questions.forEach((question) => {
-					question['select'] = '' // 用户选择的答案
-					// question['right'] = question.qanswer.split(';')[1].split('=')[1]
-					question['right'] = 1
-				})
+			this.scores = []
+			this.answer = true
+			this.answerAgain = !this.answer
+			// 根据试卷id获取全部试题
+			// getQuestions({
+			// 	pid: item.pid,
+			// }).then((res) => {
+			// 	this.questions = res.data
+			// 	this.questions.forEach((question) => {
+			// 		question['select'] = '' // 用户选择的答案
+			// 		question['right'] = question.qanswer.split(';')[1].split('=')[1] // 正确的答案
+			// 	})
+			// })
+		},
+		answerPaperAgain(item) {
+			this.questions.forEach((question) => {
+				question.select = ''
 			})
 		},
-		checkPaper() {},
-		answerPaperAgain() {},
 		submitPaper(item) {
-			console.log(this.questions)
-			item.dialog2 = false
+			let scoreNew = 0
+			this.questions.forEach((question) => {
+				scoreNew += question.point * Number(question.right === question.select)
+			})
+			if (item.hasOwnProperty('dialog1')) {
+				item.dialog1 = false
+			} else {
+				item.dialog = false
+			}
 			this.$message({
 				type: 'success',
 				message: '交卷成功',
 			})
+			this.scores.push(scoreNew)
 		},
 	},
 }

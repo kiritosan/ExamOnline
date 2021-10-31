@@ -34,7 +34,7 @@
 							<v-spacer></v-spacer>
 
 							<v-dialog
-								v-model="dialog"
+								v-model="person.dialog"
 								fullscreen
 								hide-overlay
 								transition="dialog-bottom-transition"
@@ -45,7 +45,6 @@
 										color="grey"
 									>
 										<v-icon small>mdi-message</v-icon>
-
 										<span
 											class="text-uppercase"
 											@click="examDetails"
@@ -63,7 +62,7 @@
 										<v-btn
 											icon
 											dark
-											@click="dialog = false"
+											@click="person.dialog = false"
 										>
 											<v-icon>mdi-close</v-icon>
 										</v-btn>
@@ -73,7 +72,7 @@
 											<v-btn
 												dark
 												text
-												@click="dialog = false"
+												@click="person.dialog = false"
 											>
 												Save
 											</v-btn>
@@ -162,7 +161,6 @@ export default {
 				{ text: '成绩', value: 'score' },
 			],
 			desserts: [],
-			dialog: false,
 			notifications: false,
 			sound: true,
 			widgets: false,

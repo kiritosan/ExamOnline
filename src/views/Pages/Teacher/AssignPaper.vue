@@ -618,6 +618,7 @@ export default {
 				pid: item.pid,
 			}).then((res) => {
 				this.questions = res.data
+				console.log(JSON.stringify(this.questions))
 				this.questions.forEach((question) => {
 					question['select'] = '' // 用户选择的答案
 					question['right'] = question.qanswer.split(';')[1].split('=')[1]
