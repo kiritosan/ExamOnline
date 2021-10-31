@@ -1,5 +1,9 @@
 import vue from 'vue'
 import VueRouter from 'vue-router'
+import {
+  teacherData,
+  studentData
+} from '../utils/navData'
 
 const Login = () =>
   import ('../views/Pages/Login/Login.vue')
@@ -7,12 +11,6 @@ const Regist = () =>
   import ('../views/Pages/Login/Regist.vue')
 const Home = () =>
   import ('../views/Components/Home/Home.vue')
-const Index = () =>
-  import ('../views/Pages/Index/Index.vue')
-const About = () =>
-  import ('../views/Pages/About/About.vue')
-const Team = () =>
-  import ('../views/Pages/Team/Team.vue')
 const UpdatePsw = () =>
   import ('../views/Pages/Login/UpdatePsw.vue')
 
@@ -41,27 +39,19 @@ const routes = [{
     path: '/home',
     name: 'home',
     component: Home,
-    children: [{
-        path: "",
-        redirect: "index"
-      }, {
-        path: 'about',
-        name: 'about',
-        component: About
-      },
-      {
-        path: 'team',
-        name: 'team',
-        component: Team
-      },
-      {
-        path: 'index',
-        name: 'index',
-        component: Index
-      }
-    ]
+    children: []
   },
 ]
+
+let home = routes.find(item => item.name === 'home')
+
+// 动态加载路由
+teacherData.forEach(item => {
+  home.children.push(item)
+})
+studentData.forEach(item => {
+  home.children.push(item)
+})
 
 const router = new VueRouter({
   routes,
@@ -69,7 +59,7 @@ const router = new VueRouter({
 })
 
 
-// 全局路由守卫, 没有token直接跳转回login
+// 全局路由守卫, 路由跳转没有token直接跳转回login
 router.beforeEach((to, from, next) => {
   if (['login', 'regist', 'updatePsw'].includes(to.name)) next()
   else {
@@ -77,6 +67,5 @@ router.beforeEach((to, from, next) => {
     else next()
   }
 })
-
 
 export default router

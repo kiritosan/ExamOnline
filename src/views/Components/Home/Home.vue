@@ -11,15 +11,9 @@
 <script>
 import NavBar from '../../Layouts/NavBar/Navbar.vue'
 export default {
-	name: 'CuifanBase',
-	data() {
-		return {}
-	},
+	name: 'CuifanHome',
 	components: {
 		NavBar,
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

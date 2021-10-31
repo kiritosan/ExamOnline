@@ -18,7 +18,6 @@
 						</h1>
 					</v-card-title>
 				</v-card>
-
 				<v-card
 					flat
 					outlined
@@ -36,7 +35,6 @@
 							{{ item }}
 						</v-tab>
 					</v-tabs>
-
 					<v-tabs-items v-model="tab">
 						<v-form
 							ref="form"
@@ -44,14 +42,12 @@
 							lazy-validation
 							class="mx-6 mt-6"
 						>
-
 							<v-text-field
 								v-model="name"
 								:rules="nameRules"
 								label="姓名"
 								required
 							></v-text-field>
-
 							<div>
 								<v-row>
 									<v-col cols="7">
@@ -84,7 +80,6 @@
 									</v-col>
 								</v-row>
 							</div>
-
 							<v-text-field
 								v-model="phone"
 								:counter="11"
@@ -92,14 +87,12 @@
 								label="手机号"
 								required
 							></v-text-field>
-
 							<v-text-field
 								v-model="email"
 								:rules="emailRules"
 								label="邮箱"
 								required
 							></v-text-field>
-
 							<v-text-field
 								v-model="password"
 								:append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
@@ -109,7 +102,6 @@
 								@click:append="show = !show"
 								required
 							></v-text-field>
-
 							<v-text-field
 								v-model="password1"
 								:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -119,7 +111,6 @@
 								@click:append="show1 = !show1"
 								required
 							></v-text-field>
-
 							<v-checkbox
 								v-model="agreeTreaty"
 								:rules="[v => !!v || '该项必须勾选']"
@@ -127,31 +118,21 @@
 								required
 							>
 							</v-checkbox>
-
 							<div class="justify-center d-flex my-4">
 								<v-btn
 									:disabled="!valid"
 									color="success"
 									class="mr-4"
-									@click="validate"
+									@click="toRegist"
 								>
 									注册
 								</v-btn>
-
 								<v-btn
 									color="error"
 									class="mr-4"
-									@click="reset"
+									@click="$refs.form.reset()"
 								>
 									重置
-								</v-btn>
-
-								<v-btn
-									color="error"
-									class="mr-4"
-									@click="test"
-								>
-									测试
 								</v-btn>
 							</div>
 						</v-form>
@@ -166,16 +147,14 @@
 							href="/login"
 							style="color:#58d8cb!important"
 						>去登录。</a></v-card-text>
-
 				</v-card>
 			</div>
 			<div v-else>
 				<v-card class="pb-4">
 					<v-card-title>为您分配的账号为：<span class="account">{{account}}</span> &nbsp;, 请牢记哦~</v-card-title>
-
 					<v-card-actions class="d-flex justify-center">
 						<v-btn
-							@click="toLogin"
+							@click="$router.push('/login')"
 							color="success"
 							class="mr-4"
 						>
@@ -184,7 +163,7 @@
 						<v-btn
 							color="success"
 							class="mr-4"
-							@click="toRegist"
+							@click="router.push('/regist')"
 						>
 							重新注册
 						</v-btn>
@@ -193,7 +172,6 @@
 			</div>
 		</v-main>
 	</v-app>
-
 </template>
 
 <script>
@@ -204,7 +182,7 @@ export default {
 			// 注册成功账号显示
 			reveal: true,
 			account: '123456',
-			// 表单数据
+			// 注册表单数据
 			name: '',
 			sex: 'm',
 			institutes: ['信息学院', '植科院', '工学院'],
@@ -214,18 +192,14 @@ export default {
 			password: '',
 			password1: '',
 			agreeTreaty: false,
-
 			// 控制密码框显示与隐藏
 			show: false,
 			show1: false,
-
 			// 控制tab栏切换
 			tab: '我是学生',
 			items: ['我是学生', '我是老师'],
-
 			// 验证表单合法性
 			valid: true,
-
 			// 表单验证规则
 			nameRules: [
 				(v) => !!v || '姓名不能为空',
@@ -237,7 +211,11 @@ export default {
 				(v) => /^\d+$/.test(v) || '电话号码必须为数字',
 				(v) => (v && v.length === 11) || '电话号码长度为11位',
 			],
-
+			emailRules: [
+				(v) => !!v || '邮箱不能为空',
+				(v) =>
+					/^[1-9]\d{4,10}@qq\.com$/.test(v) || '邮箱格式错误，目前仅支持QQ邮箱',
+			],
 			passwordRules: [
 				(v) => !!v || '密码不能为空',
 				(v) =>
@@ -248,21 +226,19 @@ export default {
 		}
 	},
 	methods: {
-		validate() {
+		toRegist() {
 			// 表单输入不合法
 			if (!this.$refs.form.validate()) return
 			let status = ['s', 't']
-
-			let query = {
+			let regist = [sregist, tregist][this.tab]
+			regist({
 				[status[this.tab] + 'name']: this.name,
 				[status[this.tab] + 'sex']: this.sex,
-				[status[this.tab] + 'sphone']: this.phone,
+				[status[this.tab] + 'phone']: this.phone,
 				coid: this.institutes.findIndex((institute) => institute === this.coid),
 				psw: this.password,
 				email: this.email,
-			}
-			let regist = [sregist, tregist][this.tab]
-			regist(query).then((res) => {
+			}).then((res) => {
 				if (res.data.state === false) return
 				this.account = res.data
 				this.$message({
@@ -272,23 +248,9 @@ export default {
 				this.reveal = false
 			})
 		},
-
-		reset() {
-			this.$refs.form.reset()
-		},
-		test() {
-			this.reveal = false
-		},
-		toLogin() {
-			this.$router.push('/login')
-		},
-		toRegist() {
-			this.$router.push('/regist')
-		},
 	},
 }
 </script>
-
 <style>
 .cuifan {
 	color: #4bd5c7 !important;

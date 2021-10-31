@@ -2,20 +2,12 @@ import {
   request
 } from "../../utils/request";
 
+// 1.老师相关
 // 老师注册
 export function tregist(data) {
   return request({
     method: 'PUT',
     url: '/tregistLogin/regist',
-    data
-  })
-}
-
-// 学生注册
-export function sregist(data) {
-  return request({
-    method: 'PUT',
-    url: '/sregistLogin/regist',
     data
   })
 }
@@ -29,6 +21,16 @@ export function tlogin(data) {
   })
 }
 
+// 2.学生相关
+// 学生注册
+export function sregist(data) {
+  return request({
+    method: 'PUT',
+    url: '/sregistLogin/regist',
+    data
+  })
+}
+
 // 学生登录
 export function slogin(data) {
   return request({
@@ -38,7 +40,7 @@ export function slogin(data) {
   })
 }
 
-// 老师学生找回密码
+// 3.公共
 // 发送验证码
 export function getCode(params) {
   return request({
@@ -64,4 +66,13 @@ export function updatePsw(data) {
     url: '/same/updatePsw',
     data
   })
+}
+
+// 获取cookie中保存的用户名
+export function getUserAccount() {
+  let userDetails = {}
+  document.cookie.split(';').forEach((item) => {
+    userDetails[item.split('=')[0].trim()] = item.split('=')[1].trim()
+  })
+  return userDetails.userName
 }

@@ -9,5 +9,13 @@ export function request(options) {
       'content-type': 'application/json'
     }
   })
+
+  //拦截请求
+  instance.interceptors.request.use(config => {
+    // 给每个请求携带token
+    let token = window.localStorage.getItem('token')
+    config.headers.Authorization = token
+    return config
+  })
   return instance(options)
 }
