@@ -3,8 +3,8 @@
 		<v-container>
 			<v-expansion-panels>
 				<v-expansion-panel
-					v-for="subject in subjects"
-					:key="subject.course"
+					v-for="(subject,index) in subjects"
+					:key="index"
 				>
 					<v-expansion-panel-header>
 						<v-card flat>
@@ -82,6 +82,19 @@
 											max-width="400"
 											tile
 										>
+											<v-toolbar
+												dark
+												color="primary"
+											>
+												<v-btn
+													icon
+													dark
+													@click="item.dialog2 = false"
+												>
+													<v-icon>mdi-close</v-icon>退出
+												</v-btn>
+												<v-toolbar-title>倒计时:30:00</v-toolbar-title>
+											</v-toolbar>
 											<v-row style="height:130px"></v-row>
 											<v-row>
 												<v-col></v-col>
@@ -244,21 +257,22 @@
 												class="text-caption my-2 white--text"
 												style="border-radius:5px"
 											>查看试卷</v-btn>
-
 										</template>
 										<v-card>
-											<v-toolbar
-												dark
-												color="primary"
-											>
-												<v-btn
-													icon
+											<v-row>
+												<v-toolbar
 													dark
-													@click="item.dialog3 = false"
+													color="primary"
 												>
-													<v-icon>mdi-close</v-icon>退出
-												</v-btn>
-											</v-toolbar>
+													<v-btn
+														icon
+														dark
+														@click="item.dialog3 = false"
+													>
+														<v-icon>mdi-close</v-icon>退出
+													</v-btn>
+												</v-toolbar>
+											</v-row>
 											<v-row>
 												<v-col cols="3"></v-col>
 												<v-col>
@@ -309,34 +323,7 @@ export default {
 			account: '', // 学生账号
 
 			// 全部课程
-			subjects: [
-				{
-					course: '数据结构',
-					id: 0,
-					due: getTime(),
-					person: 'simon',
-					status: 'ongoing',
-					// 该课程下所有的试卷
-					papers: [
-						{
-							pid: 0,
-							deadline: getTime(),
-							tnum: this.account,
-							pdescribe: '默认名称',
-						},
-					],
-					search: '',
-				},
-				{
-					course: '数据库',
-					id: 1,
-					due: getTime(),
-					person: 'cuifan',
-					status: 'ongoing',
-					papers: [],
-					search: '',
-				},
-			],
+			subjects: [],
 
 			// 试卷表格头部
 			headers: [
@@ -351,9 +338,10 @@ export default {
 				{ text: '操作', value: 'action' },
 				{ text: '成绩', value: 'score' },
 			],
-			questions: JSON.parse(
-				'[{"qid":562,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":1},{"qid":563,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":2},{"qid":564,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":3},{"qid":565,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":4},{"qid":566,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":5},{"qid":567,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":6},{"qid":568,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":7},{"qid":569,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":8},{"qid":570,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":9},{"qid":571,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":10}]'
-			), // 全部试题内容
+			// JSON.parse(
+			// 	'[{"qid":562,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":1},{"qid":563,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":2},{"qid":564,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":3},{"qid":565,"qcontent":"1+1","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":4},{"qid":566,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":5},{"qid":567,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":6},{"qid":568,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":7},{"qid":569,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":8},{"qid":570,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":9},{"qid":571,"qcontent":"1+2","point":"10","qanswer":"A=1&B=2&C=3&D=4;answer=2","pid":65,"qnum":10}]'
+			// )
+			questions: [], // 全部试题内容
 			// 控制再次答题按钮
 			answer: false,
 			answerAgain: true,
@@ -382,31 +370,31 @@ export default {
 			})
 			.then((res) => {
 				// console.log(res)
-				// res.data.forEach((item) => {
-				// 	this.subjects.push({
-				// 		course: item.cname,
-				// 		id: item.cid,
-				// 		due: getTime(),
-				// 		person: this.name,
-				// 		status: 'ongoing',
-				// 		papers: [],
-				// 		search: '',
-				// 	})
-				// })
-				// // 获取学生对应课程下的所有试卷
-				// this.subjects.forEach((subject) => {
-				// 	getStudentAllPapers({
-				// 		cid: subject.id,
-				// 		snum: this.account,
-				// 	}).then((res) => {
-				// if (!res.data.msg) {
-				// 	subject.papers = JSON.parse(JSON.stringify(res.data))
-				// 	subject.papers.forEach((paper) => {
-				// 		paper['paperName'] = paper.pdescribe
-				// })
-				// }
-				// })
-				// })
+				res.data.forEach((item) => {
+					this.subjects.push({
+						course: item.cname,
+						id: item.cid,
+						due: getTime(),
+						person: this.name,
+						status: 'ongoing',
+						papers: [],
+						search: '',
+					})
+				})
+				// 获取学生对应课程下的所有试卷
+				this.subjects.forEach((subject) => {
+					getStudentAllPapers({
+						cid: subject.id,
+						snum: this.account,
+					}).then((res) => {
+						if (!res.data.msg) {
+							subject.papers = JSON.parse(JSON.stringify(res.data))
+							subject.papers.forEach((paper) => {
+								paper['paperName'] = paper.pdescribe
+							})
+						}
+					})
+				})
 			})
 	},
 
@@ -417,15 +405,15 @@ export default {
 			this.answer = true
 			this.answerAgain = !this.answer
 			// 根据试卷id获取全部试题
-			// getQuestions({
-			// 	pid: item.pid,
-			// }).then((res) => {
-			// 	this.questions = res.data
-			// 	this.questions.forEach((question) => {
-			// 		question['select'] = '' // 用户选择的答案
-			// 		question['right'] = question.qanswer.split(';')[1].split('=')[1] // 正确的答案
-			// 	})
-			// })
+			getQuestions({
+				pid: item.pid,
+			}).then((res) => {
+				this.questions = res.data
+				this.questions.forEach((question) => {
+					question['select'] = '' // 用户选择的答案
+					question['right'] = question.qanswer.split(';')[1].split('=')[1] // 正确的答案
+				})
+			})
 		},
 		answerPaperAgain(item) {
 			this.questions.forEach((question) => {

@@ -86,10 +86,7 @@
 				outlined
 				class="mt-4"
 			>
-				<v-card-text class="text-center">新用户？<a
-						href="/regist"
-						style="color:#58d8cb!important"
-					>去注册。</a><span class="mx-3"></span> 忘记密码？<a
+				<v-card-text class="text-center"><span class="mx-3"></span> 忘记密码？<a
 						href="/updatePsw"
 						style="color:#58d8cb!important"
 					>去找回。</a>

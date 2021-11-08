@@ -340,6 +340,20 @@
 											>查看试卷</v-chip>
 										</template>
 										<v-card>
+											<v-toolbar
+												dark
+												color="primary"
+											>
+												<v-btn
+													icon
+													dark
+													@click="item.dialog2 = false"
+												>
+													<v-icon>mdi-close</v-icon>退出
+												</v-btn>
+												<v-toolbar-title>倒计时:30:00</v-toolbar-title>
+											</v-toolbar>
+
 											<v-row>
 												<v-col cols="3"></v-col>
 												<v-col>

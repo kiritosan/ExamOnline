@@ -35,6 +35,7 @@
 						<v-btn
 							color="success"
 							@click="chooseLesson(item)"
+							class="cuifan"
 						>
 							选课
 						</v-btn>
@@ -263,18 +264,18 @@ export default {
 				cid: course.cid,
 				cname: course.cname,
 			})
-			this.$message({
+			course.checked = this.$message({
 				type: 'success',
 				message: '添加课程' + course.cname + '成功',
 			})
 		},
 		// 发送所有选课信息
 		chooseCoursesRightly() {
-			console.log(1)
 			chooseTeacherClasses({
 				tnum: this.account,
 				classList: this.classList,
-			}).then(() => {
+			}).then((res) => {
+				console.log(res)
 				this.$message({
 					type: 'success',
 					message: '选课成功',
