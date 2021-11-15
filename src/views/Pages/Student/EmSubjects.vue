@@ -388,7 +388,7 @@ export default {
 						snum: this.account,
 					}).then((res) => {
 						if (!res.data.msg) {
-							subject.papers = JSON.parse(JSON.stringify(res.data))
+							subject.papers = res.data.filter((paper) => paper)
 							subject.papers.forEach((paper) => {
 								paper['paperName'] = paper.pdescribe
 							})

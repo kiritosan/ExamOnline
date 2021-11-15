@@ -90,7 +90,12 @@
 						href="/updatePsw"
 						style="color:#58d8cb!important"
 					>去找回。</a>
+					<span class="mx-3"></span> 没有账号？<a
+						href="/regist"
+						style="color:#58d8cb!important"
+					>去注册。</a>
 				</v-card-text>
+
 			</v-card>
 		</v-main>
 	</v-app>

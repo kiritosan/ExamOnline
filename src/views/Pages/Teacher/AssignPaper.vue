@@ -485,6 +485,7 @@ export default {
 						cid: subject.id,
 						tnum: this.account,
 					}).then((res) => {
+						console.log(res)
 						if (!res.data.msg) {
 							subject.papers = JSON.parse(JSON.stringify(res.data))
 							subject.papers.forEach((paper) => {
