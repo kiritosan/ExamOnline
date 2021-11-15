@@ -191,6 +191,7 @@ export default {
 						message: res.data.msg,
 					})
 					this.dialog = false
+					window.location.reload()
 				}
 			})
 		},

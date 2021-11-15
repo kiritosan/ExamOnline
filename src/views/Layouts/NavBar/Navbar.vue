@@ -13,6 +13,7 @@
 			<v-dialog
 				v-model="dialog"
 				width="500"
+				persistent
 			>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn
@@ -35,17 +36,39 @@
 						<v-btn
 							color="success"
 							@click="chooseLesson(item)"
-							class="cuifan"
+							class="cuifan mr-4"
+							:disabled="item.disabled"
 						>
 							选课
 						</v-btn>
+						<v-btn
+							color="error"
+							@click="cancelselectedLesson(item)"
+						>
+							取消
+						</v-btn>
 
 					</template>
+
 				</v-data-table>
-				<v-btn
-					@click="chooseCoursesRightly"
-					color="success"
-				>我选好了</v-btn>
+				<div style="background-color:white">
+					<span class="ml-10">已选课程：{{classList.map(item=>item.cname)}}</span>
+				</div>
+				<div
+					style="background-color:white"
+					class="d-flex justify-center py-4"
+				>
+
+					<v-btn
+						color="error"
+						class="mr-4"
+						@click="dialog = false"
+					>退出</v-btn>
+					<v-btn
+						@click="chooseCoursesRightly"
+						color="success"
+					>确认</v-btn>
+				</div>
 			</v-dialog>
 
 			<v-menu offset-y>
@@ -153,7 +176,6 @@ import {
 	getAllTeacherCanTeach,
 } from '@/api/Info'
 import { getUserAccount } from '@/api/Login'
-import vue from 'vue'
 export default {
 	name: 'NavBar',
 	components: {
@@ -212,6 +234,9 @@ export default {
 			})
 			.then((res) => {
 				this.desserts = res.data
+				this.desserts.forEach((item) => {
+					this.$set(item, 'disabled', false)
+				})
 			})
 
 		// 更新导航栏
@@ -258,28 +283,48 @@ export default {
 				file: this.formData,
 			}).then(() => {})
 		},
+
 		// 老师一门门添加要选的课
 		chooseLesson(course) {
+			// 禁用选课按钮
+			this.desserts.forEach((item) => {
+				if (course.cid === item.cid) return (item.disabled = true)
+			})
+			console.log(this.desserts)
 			this.classList.push({
 				cid: course.cid,
 				cname: course.cname,
 			})
-			course.checked = this.$message({
+			this.$message({
 				type: 'success',
 				message: '添加课程' + course.cname + '成功',
 			})
 		},
+
+		cancelselectedLesson(course) {
+			// 取消这门课选课按钮的禁用
+			this.desserts.forEach((item) => {
+				if (course.cid === item.cid) return (item.disabled = false)
+			})
+			this.classList.forEach((item, index) => {
+				if (item.cid === course.cid) {
+					this.classList.splice(index, 1)
+				}
+			})
+		},
+
 		// 发送所有选课信息
 		chooseCoursesRightly() {
 			chooseTeacherClasses({
 				tnum: this.account,
 				classList: this.classList,
 			}).then((res) => {
-				console.log(res)
+				this.dialog = false
 				this.$message({
 					type: 'success',
 					message: '选课成功',
 				})
+				window.location.reload()
 			})
 		},
 	},

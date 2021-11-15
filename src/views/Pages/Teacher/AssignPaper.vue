@@ -485,7 +485,6 @@ export default {
 						cid: subject.id,
 						tnum: this.account,
 					}).then((res) => {
-						console.log(res)
 						if (!res.data.msg) {
 							subject.papers = JSON.parse(JSON.stringify(res.data))
 							subject.papers.forEach((paper) => {
@@ -505,16 +504,22 @@ export default {
 			}).then((res) => {
 				if (res.data.state) {
 					this.pid = res.data.pid
-					subject.papers.push({
-						pid: res.data.pid,
+					updatePaperInfo({
+						pdescribe: subject.course,
+						pid: this.pid,
 						deadline: getTime(),
-						tnum: this.account,
-						pdescribe: '默认名称',
+					}).then((res) => {
+						subject.papers.push({
+							pid: this.pid,
+							deadline: getTime(),
+							tnum: this.account,
+							pdescribe: subject.course,
+						})
 					})
 				}
 			})
 		},
-		//向试卷添加题目
+		// 向试卷添加题目
 		addAgain(subject) {
 			if (!this.validate()) {
 				return this.$message({
@@ -611,7 +616,6 @@ export default {
 				pid: item.pid,
 			})
 				.then((res) => {
-					console.log(res)
 					if (res.data.state)
 						this.$message({
 							type: 'success',
@@ -633,11 +637,9 @@ export default {
 				pid: item.pid,
 			}).then((res) => {
 				this.questions = res.data
-				console.log(JSON.stringify(this.questions))
 				this.questions.forEach((question) => {
 					question['select'] = '' // 用户选择的答案
 					question['right'] = question.qanswer.split(';')[1].split('=')[1]
-					console.log(question['right'])
 				})
 			})
 		},
