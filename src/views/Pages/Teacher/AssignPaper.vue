@@ -41,152 +41,221 @@
 										<v-dialog
 											v-model="subject.dialog"
 											persistent
-											max-width="440"
+											max-width="500"
 										>
 											<template v-slot:activator="{ on, attrs }">
 												<v-chip
 													:class="`${subject.status}  text-caption my-2 white--text`"
 													style="cursor:pointer"
-													@click="addPaper(subject)"
 													v-bind="attrs"
 													v-on="on"
 												>添加试卷</v-chip>
 											</template>
-											<v-card
-												flat
-												outlined
-												min-height="600"
-											>
-												<v-tabs
-													v-model="tab"
-													fixed-tabs
-												>
-													<v-tabs-slider color="bg_success"></v-tabs-slider>
-													<v-tab
-														v-for="item in items"
-														:key="item"
-														active-class="cuifan"
-													>
-														{{ item }}
-													</v-tab>
-												</v-tabs>
-												<v-tabs-items v-model="tab">
+
+											<v-card>
+												<v-card-title class="text-h5">
+													添加试题信息
+												</v-card-title>
+												<v-card-text>
 													<v-form
-														ref="form"
-														v-model="valid"
+														:ref="subject.id"
+														v-model="valid2"
 														lazy-validation
-														class="mx-6  py-2"
-														v-if="tab==0"
+														class="mt-8 mx-4 mr-8"
 													>
-														<v-card-title class="mb-3">{{qnum}}. 请输入题目:</v-card-title>
-														<v-row class="px-2 pr-4 ml-9 mr-3 mb-3">
+														<v-row>
+															<p
+																style="font-size:16px"
+																class="mt-3"
+																:rules="pdescribeRules"
+															>试卷名称：</p>
 															<v-text-field
-																v-model="qcontent"
-																:rules="optionRules"
-																required
-																dense
-															></v-text-field>
-														</v-row>
-														<v-row class="px-2 pr-4">
-															<span
-																style="color:#666"
-																class="mt-2 mx-2"
-															>A选项:</span>
-															<v-text-field
-																v-model="optionA"
-																:rules="optionRules"
-																required
 																outlined
 																dense
+																:rules="pdescribeRules"
+																v-model="paperName"
 															></v-text-field>
 														</v-row>
-														<v-row class="px-2 pr-4">
-															<span
-																style="color:#666"
-																class="mt-2 mx-2"
-															>B选项:</span>
+														<v-row>
+															<p
+																style="font-size:16px"
+																class="mt-3"
+															>截止日期：</p>
 															<v-text-field
-																v-model="optionB"
-																:rules="optionRules"
-																required
 																outlined
 																dense
+																:rules="pdescribeRules"
+																v-model="deadline"
 															></v-text-field>
 														</v-row>
-														<v-row class="px-2 pr-4">
-															<span
-																style="color:#666"
-																class="mt-2 mx-2"
-															>C选项:</span>
-															<v-text-field
-																v-model="optionC"
-																:rules="optionRules"
-																required
-																outlined
-																dense
-															></v-text-field>
-														</v-row>
-														<v-row class="px-2 pr-4">
-															<span
-																style="color:#666"
-																class="mt-2 mx-2"
-															>D选项:</span>
-															<v-text-field
-																v-model="optionD"
-																:rules="optionRules"
-																required
-																outlined
-																dense
-															></v-text-field>
-														</v-row>
-														<v-row class="px-2 pr-4">
-															<span
-																style="color:#666"
-																class="mt-2 mx-2"
-															>正确答案:</span>
-															<v-text-field
-																v-model="qanswer"
-																:rules="optionRules"
-																required
-																outlined
-																dense
-															></v-text-field>
-														</v-row>
-														<div class="justify-center d-flex my-4">
-															<v-btn
-																color="success"
-																class="mr-4"
-																@click="exit(subject)"
-															>
-																退出
-															</v-btn>
-															<v-btn
-																color="error"
-																class="mr-4"
-																@click="reset"
-															>
-																重置
-															</v-btn>
-															<v-btn
-																color="success"
-																class="mr-4"
-																@click="addAgain"
-																:disabled="!valid"
-															>
-																继续添加
-															</v-btn>
-															<v-btn
-																color="error"
-																class="mr-4"
-																:disabled="confirm"
-																@click="addAgain(subject)"
-															>
-																确认
-															</v-btn>
-														</div>
 													</v-form>
-												</v-tabs-items>
+												</v-card-text>
+												<v-card-actions>
+													<v-spacer></v-spacer>
+													<v-btn
+														color="error darken-1 mb-4"
+														@click="subject.dialog=false"
+													>
+														取消
+													</v-btn>
+
+													<v-dialog
+														v-model="subject.dialog1"
+														persistent
+														max-width="420"
+													>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																color="success darken-1"
+																v-bind="attrs"
+																v-on="on"
+																class="mx-4 mr-6 mb-4"
+																:disabled="!valid2"
+																@click="addPaper(subject)"
+															>
+																开始出题
+															</v-btn>
+														</template>
+
+														<v-card
+															flat
+															outlined
+															min-height="600"
+														>
+															<v-tabs
+																v-model="tab"
+																fixed-tabs
+															>
+																<v-tabs-slider color="bg_success"></v-tabs-slider>
+																<v-tab
+																	v-for="item in items"
+																	:key="item"
+																	active-class="cuifan"
+																>
+																	{{ item }}
+																</v-tab>
+															</v-tabs>
+															<v-tabs-items v-model="tab">
+																<v-form
+																	ref="form"
+																	v-model="valid"
+																	lazy-validation
+																	class="mx-6  py-2"
+																	v-if="tab==0"
+																>
+																	<v-card-title class="mb-3">{{qnum}}. 请输入题目:</v-card-title>
+																	<v-row class="px-2 pr-4 ml-9 mr-3 mb-3">
+																		<v-text-field
+																			v-model="qcontent"
+																			:rules="optionRules"
+																			required
+																			dense
+																		></v-text-field>
+																	</v-row>
+																	<v-row class="px-2 pr-4">
+																		<span
+																			style="color:#666"
+																			class="mt-2 mx-2"
+																		>A选项:</span>
+																		<v-text-field
+																			v-model="optionA"
+																			:rules="optionRules"
+																			required
+																			outlined
+																			dense
+																		></v-text-field>
+																	</v-row>
+																	<v-row class="px-2 pr-4">
+																		<span
+																			style="color:#666"
+																			class="mt-2 mx-2"
+																		>B选项:</span>
+																		<v-text-field
+																			v-model="optionB"
+																			:rules="optionRules"
+																			required
+																			outlined
+																			dense
+																		></v-text-field>
+																	</v-row>
+																	<v-row class="px-2 pr-4">
+																		<span
+																			style="color:#666"
+																			class="mt-2 mx-2"
+																		>C选项:</span>
+																		<v-text-field
+																			v-model="optionC"
+																			:rules="optionRules"
+																			required
+																			outlined
+																			dense
+																		></v-text-field>
+																	</v-row>
+																	<v-row class="px-2 pr-4">
+																		<span
+																			style="color:#666"
+																			class="mt-2 mx-2"
+																		>D选项:</span>
+																		<v-text-field
+																			v-model="optionD"
+																			:rules="optionRules"
+																			required
+																			outlined
+																			dense
+																		></v-text-field>
+																	</v-row>
+																	<v-row class="px-2 pr-4">
+																		<span
+																			style="color:#666"
+																			class="mt-2 mx-2"
+																		>正确答案:</span>
+																		<v-text-field
+																			v-model="qanswer"
+																			:rules="optionRules"
+																			required
+																			outlined
+																			dense
+																		></v-text-field>
+																	</v-row>
+																	<div class="justify-center d-flex my-4">
+																		<v-btn
+																			color="success"
+																			class="mr-4"
+																			@click="exit(subject)"
+																		>
+																			退出
+																		</v-btn>
+																		<v-btn
+																			color="error"
+																			class="mr-4"
+																			@click="reset"
+																		>
+																			重置
+																		</v-btn>
+																		<v-btn
+																			color="success"
+																			class="mr-4"
+																			@click="addAgain"
+																			:disabled="!valid"
+																		>
+																			继续添加
+																		</v-btn>
+																		<v-btn
+																			color="error"
+																			class="mr-4"
+																			:disabled="confirm"
+																			@click="addAgain(subject)"
+																		>
+																			确认
+																		</v-btn>
+																	</div>
+																</v-form>
+															</v-tabs-items>
+														</v-card>
+													</v-dialog>
+												</v-card-actions>
 											</v-card>
+
 										</v-dialog>
 									</div>
 								</v-col>
@@ -220,7 +289,7 @@
 									<v-dialog
 										v-model="item.dialog"
 										persistent
-										max-width="420"
+										max-width="500"
 									>
 										<template v-slot:activator="{ on, attrs }">
 											<v-chip
@@ -237,7 +306,7 @@
 											</v-card-title>
 											<v-card-text>
 												<v-form
-													ref="item.pid"
+													:ref="item.pid"
 													v-model="valid1"
 													lazy-validation
 													class="mt-8 mx-4 mr-8"
@@ -408,6 +477,7 @@ export default {
 			// 验证表单输入合法性
 			valid: false,
 			valid1: false,
+			valid2: false,
 			notifications: false,
 			sound: true,
 			widgets: false,
@@ -420,8 +490,8 @@ export default {
 					sortable: false,
 					value: 'pid',
 				},
-				{ text: '试卷名称', value: 'pdescribe' },
-				{ text: '截至时间', value: 'deadline' },
+				{ text: '试卷名称', value: 'paperName' },
+				{ text: '截至时间', value: 'dueTime' },
 				{ text: '操作', value: 'action' },
 			],
 			// 试卷名称验证规则
@@ -445,6 +515,9 @@ export default {
 			pid: '',
 			// 全部试题
 			questions: [],
+			// 临时记录要添加的试卷的名称和截至时间
+			paperName: '',
+			deadline: getTime(),
 		}
 	},
 	created() {
@@ -489,6 +562,7 @@ export default {
 							subject.papers = JSON.parse(JSON.stringify(res.data))
 							subject.papers.forEach((paper) => {
 								paper['paperName'] = paper.pdescribe
+								paper['dueTime'] = paper.deadline
 							})
 						}
 					})
@@ -496,25 +570,33 @@ export default {
 			})
 	},
 	methods: {
-		// 创建空白试卷
+		// 开始添加试卷
+		beginDraw(subject) {
+			// 验证表单合法性
+		},
+		// 创建试卷(不含试题内容，携带试卷信息【截至时间和名称】)
 		addPaper(subject) {
+			// 创建空白试卷
 			createOnePaper({
 				cid: subject.id,
 				tnum: this.account,
 			}).then((res) => {
 				if (res.data.state) {
 					this.pid = res.data.pid
+					// 验证试卷信息表单的合法性
+					if (!this.$refs[subject.id][0].validate()) return
 					updatePaperInfo({
-						pdescribe: subject.course,
+						pdescribe: this.paperName,
 						pid: this.pid,
-						deadline: getTime(),
+						deadline: this.deadline,
 					}).then((res) => {
 						subject.papers.push({
 							pid: this.pid,
-							deadline: getTime(),
+							deadline: this.deadline,
 							tnum: this.account,
-							pdescribe: subject.course,
+							pdescribe: this.paperName,
 						})
+						window.location.reload()
 					})
 				}
 			})
@@ -597,6 +679,7 @@ export default {
 		},
 		// 编辑试卷
 		editPaper(item) {
+			if (!this.$refs[item.pid][0].validate()) return
 			updatePaperInfo({
 				pdescribe: item.pdescribe,
 				pid: item.pid,
@@ -608,6 +691,7 @@ export default {
 					message: '试卷信息更新成功',
 				})
 				item.dialog = false
+				window.location.reload()
 			})
 		},
 		// 删除试卷
