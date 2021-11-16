@@ -40,9 +40,8 @@ const routes = [{
     name: 'home',
     component: Home,
     children: []
-  },
+  }
 ]
-
 let home = routes.find(item => item.name === 'home')
 
 // 动态加载路由
