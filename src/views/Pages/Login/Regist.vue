@@ -163,7 +163,7 @@
 						<v-btn
 							color="success"
 							class="mr-4"
-							@click="router.push('/regist')"
+							@click="$router.push('/regist')"
 						>
 							重新注册
 						</v-btn>

@@ -84,7 +84,7 @@
 															<v-text-field
 																outlined
 																dense
-																:rules="pdescribeRules"
+																:rules="timeRules"
 																v-model="deadline"
 															></v-text-field>
 														</v-row>
@@ -315,7 +315,6 @@
 														<p
 															style="font-size:16px"
 															class="mt-3"
-															:rules="pdescribeRules"
 														>试卷名称：</p>
 														<v-text-field
 															outlined
@@ -333,7 +332,7 @@
 															outlined
 															dense
 															v-model="item.deadline"
-															:rules="pdescribeRules"
+															:rules="timeRules"
 														></v-text-field>
 													</v-row>
 												</v-form>
@@ -496,6 +495,12 @@ export default {
 			],
 			// 试卷名称验证规则
 			pdescribeRules: [(v) => !!v || '试卷名称不能为空！'],
+			timeRules: [
+				(v) => !!v || '截至时间不能为空！',
+				(v) =>
+					/^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/.test(v) ||
+					'时间格式不正确，参考格式"20xx-xx-xx xx:xx:xx"',
+			],
 			// 试卷选项内容
 			optionA: '',
 			optionB: '',
@@ -561,6 +566,7 @@ export default {
 						if (!res.data.msg) {
 							subject.papers = JSON.parse(JSON.stringify(res.data))
 							subject.papers.forEach((paper) => {
+								// 这两个变量用于在表格种展示试卷的截至时间和试卷名称【不用vmodel的原因是不希望在修改试卷信息的时候出现页面跟着变化的效果】
 								paper['paperName'] = paper.pdescribe
 								paper['dueTime'] = paper.deadline
 							})
@@ -596,7 +602,6 @@ export default {
 							tnum: this.account,
 							pdescribe: this.paperName,
 						})
-						window.location.reload()
 					})
 				}
 			})
@@ -645,9 +650,10 @@ export default {
 							type: 'success',
 							message: '试卷添加成功',
 						})
-						this.exit(subject)
+						subject.dialog = false
+						this.qnum = 1
 						this.confirm = true
-						return
+						return window.location.reload()
 					}
 					this.qnum++
 				}
@@ -665,6 +671,17 @@ export default {
 		exit(subject) {
 			subject.dialog = false
 			this.qnum = 1
+			deleteOnePaper({
+				pid: this.pid,
+			}).then((res) => {
+				if (res.data.state) {
+					this.$message({
+						type: 'success',
+						message: '退出成功',
+					})
+					window.location.reload()
+				}
+			})
 		},
 		// 校验添加卡片表单
 		validate() {
