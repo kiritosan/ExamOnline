@@ -84,6 +84,7 @@
 					</v-btn>
 				</template>
 				<v-list>
+					<!-- todo: router作用 -->
 					<v-list-item
 						v-for="link in links"
 						:key="link.route"
@@ -228,6 +229,7 @@ export default {
 				this.name = res.data[status + 'name']
 				// 获取老师能教授的所有课表
 				return getAllTeacherCanTeach({
+					// todo: 接口参数只要求tnum
 					coid: this.coid,
 					tnum: this.account,
 				})
