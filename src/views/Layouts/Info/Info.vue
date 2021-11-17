@@ -116,6 +116,7 @@ export default {
 			res.data.forEach((item, index) => {
 				this.courses.push({
 					name: item.cname,
+					// todo id?cid
 					id: item.id,
 					avatar:
 						'https://cdn.vuetifyjs.com/images/lists/' +
@@ -129,6 +130,7 @@ export default {
 	mounted() {},
 
 	methods: {
+		// todo:
 		async onPageChange(page) {
 			this.page = page
 		},

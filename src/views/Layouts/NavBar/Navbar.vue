@@ -253,6 +253,13 @@ export default {
 				})
 			}
 		})
+		
+		// willem:给学生和老师添加discussion导航项目
+		this.links.push({
+			text: '提问交流区',
+			route: '/home/discussion',
+			icon: 'mdi-steam',
+		})
 	},
 
 	methods: {

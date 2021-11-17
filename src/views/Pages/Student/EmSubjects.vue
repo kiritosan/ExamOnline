@@ -1,6 +1,7 @@
 <template>
 	<div class="about">
 		<v-container>
+			<!-- todo bug 老师页面 嵌套路由/home/emsubjects可以访问学生页面 -->
 			<v-expansion-panels>
 				<v-expansion-panel
 					v-for="(subject,index) in subjects"

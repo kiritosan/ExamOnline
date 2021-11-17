@@ -39,7 +39,18 @@ const routes = [{
     path: '/home',
     name: 'home',
     component: Home,
-    children: []
+    children: [
+      // willem:共有嵌套路由
+      {
+        path: 'discussion',
+        name: 'discussion',
+        meta: {
+          text: '提问交流区'
+        },
+        component: () =>
+          import ('../views/Layouts/Discussion/Discussion.vue')
+      },
+    ]
   }
 ]
 let home = routes.find(item => item.name === 'home')
