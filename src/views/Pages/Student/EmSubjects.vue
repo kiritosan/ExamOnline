@@ -93,7 +93,6 @@
 												>
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
-												<v-toolbar-title>倒计时:30:00</v-toolbar-title>
 											</v-toolbar>
 											<v-row style="height:130px"></v-row>
 											<v-row>
@@ -146,7 +145,15 @@
 												>
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
-												<v-toolbar-title>倒计时:30:00</v-toolbar-title>
+												<!-- S 倒计时 -->
+												<v-toolbar-title>	
+													<count-down 
+														:submitPaper="submitPaper"
+														:item="item"
+														:questions="question"
+														:scores="scores"/>
+												</v-toolbar-title>
+												<!-- E 倒计时 -->
 												<v-spacer></v-spacer>
 												<v-toolbar-items>
 													<v-btn
@@ -158,7 +165,7 @@
 													</v-btn>
 												</v-toolbar-items>
 											</v-toolbar>
-											<v-row>
+											<v-row class="content">
 												<v-col cols="3"></v-col>
 												<v-col>
 													<v-radio-group
@@ -209,7 +216,13 @@
 												>
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
-												<v-toolbar-title>倒计时:30:00</v-toolbar-title>
+												<!-- S 倒计时 -->
+												<v-toolbar-title>	
+													<count-down 
+														:submitPaper="submitPaper"
+														:item="item"/>
+												</v-toolbar-title>
+												<!-- E 倒计时 -->
 												<v-spacer></v-spacer>
 												<v-toolbar-items>
 													<v-btn
@@ -221,7 +234,7 @@
 													</v-btn>
 												</v-toolbar-items>
 											</v-toolbar>
-											<v-row>
+											<v-row class="content">
 												<v-col cols="3"></v-col>
 												<v-col>
 													<v-radio-group
@@ -273,7 +286,7 @@
 													</v-btn>
 												</v-toolbar>
 											</v-row>
-											<v-row>
+											<v-row class="content">
 												<v-col cols="3"></v-col>
 												<v-col>
 													<v-radio-group
@@ -314,6 +327,9 @@ import {
 	getStudentAnswers,
 } from '@/api/Paper'
 import { getUserAccount } from '@/api/Login'
+
+import CountDown from '../../Components/CountDown/CountDown.vue'
+
 export default {
 	name: 'About',
 	components: {},
@@ -348,6 +364,7 @@ export default {
 			scores: [], // 保存每一次的成绩
 		}
 	},
+	components: { CountDown },
 	computed: {},
 	created() {
 		//获取本地试题
@@ -458,5 +475,13 @@ export default {
 }
 .v-chip.v-chip--no-color.overdue {
 	background-color: tomato;
+}
+header.v-sheet.theme--dark.v-toolbar.primary {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+.row.content {
+  padding-top: 56px;
 }
 </style>
