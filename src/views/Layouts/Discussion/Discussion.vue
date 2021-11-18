@@ -1,22 +1,96 @@
 <template>
 	<div>
-		<v-container >
+		<v-container
+			fluid
+		>
 			<v-row
-				class="mb-2"
 				align="center"
+				class="mb-1"
 			>
-				<v-icon
-					large
-					color="blue darken-2"
+				<v-col
+					cols="8"
+					class="ml-7"
 				>
-					mdi-message-text
-				</v-icon>
-			<!-- todo 无分隔线 -->
-				<v-divider
-					class="mx-2"
-					vertical
-				></v-divider>
-				<span>提问交流区</span>
+					<v-icon
+						large
+						color="blue darken-2"
+					>
+						mdi-message-text
+					</v-icon>
+				<!-- todo v-row的aligin设置成center后无分隔线 -->
+					<v-divider
+						class="mx-2"
+						vertical
+					></v-divider>
+					<span>提问交流区</span>
+				</v-col>
+				<v-spacer></v-spacer>
+				<v-col
+					cols="2"
+					class="mr-2"
+				>
+				  <div class="text-center">
+						<v-dialog
+							v-model="dialog"
+							width="600"
+						>
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn
+									color="red lighten-2"
+									dark
+									v-bind="attrs"
+									v-on="on"
+								>
+									我要提问
+								</v-btn>
+							</template>
+							<v-card>
+								<v-row
+									class="ma-2"
+								>
+									<v-card-title class="text-h5 lighten-2">
+										我要提问
+									</v-card-title>
+								</v-row>
+
+								<v-row
+									class="mx-2 mt-2"
+								>
+									<v-select
+										:items="items"
+										label="课程"
+										outlined
+									></v-select>
+								</v-row>
+								<v-textarea
+									solo
+									name="input-7-4"
+									label=""
+									ref="input"
+									filled
+									no-resize
+									rows="6"
+									class="ma-2"
+									placeholder="请输入要提问的内容"
+								></v-textarea>
+								
+
+								<v-card-actions
+									
+								>
+									<v-spacer></v-spacer>
+									<v-btn
+										color="primary"
+										text
+										@click="dialog = false"
+									>
+										提交
+									</v-btn>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
+					</div>
+				</v-col>
 			</v-row>
 		</v-container>
 
@@ -35,9 +109,55 @@
 							class="ml-4"
 							
 						>
-							<v-card-text>
-								【提问】 lowcode的未来？
-							</v-card-text>
+							<!-- 问题 提问人 日期-->
+							<v-row>
+								<!-- 问题 -->
+								
+									<v-card-text
+										class="pb-0 pt-8"
+									>
+										【编译原理】 lowcode的未来？
+									</v-card-text>
+								
+								<!-- 提问人和日期 -->
+								
+									<!-- 提问人 -->
+									<v-col
+										cols="2"
+										class="pa-0 pl-2"
+									>
+										<v-card-text
+											class="py-2 pr-0"
+										>
+											name
+										</v-card-text>
+									</v-col>
+									<!-- 日期 -->
+									<v-col
+										cols="4"
+										class="pa-0"
+									>
+										<v-card-text
+											class="py-2 pl-0"
+										>
+											2021-11-18
+										</v-card-text>
+									</v-col>
+								
+							</v-row>
+							<!-- 问题详情 -->
+							<v-row
+								class="mt-0"
+							>
+									<v-card-text>
+										 Said Tommy the Cat as he reeled back to clear whatever foreign matter
+ may have nestled its way into his mighty throat. Many a fat alley rat
+had met its demise while staring point blank down the cavernous barrel of
+ this awesome prowling machine. Truly a wonder of nature this urban
+predator — Tommy the cat had many a story to tell. But it was a rare
+occasion such as this that he did.
+									</v-card-text>
+							</v-row>
 						</v-col>
 						<v-spacer></v-spacer>
 						<v-col
@@ -85,8 +205,15 @@
 							</v-card-text>
 						</v-col>
 						<v-spacer></v-spacer>
-						
 					</v-row>
+					<!-- 分页 -->
+					<div class="text-center">
+						<v-pagination
+							v-model="page"
+							:length="15"
+							:total-visible="7"
+						></v-pagination>
+					</div>
 
 					<v-divider
 						class="my-2"
@@ -191,7 +318,9 @@ export default {
 		return {
 			name: '', //姓名
 			answerText:'', //回答内容文本
-			avatorCode:'' //头像对应的编码
+			avatorCode:'', //头像对应的编码
+			dialog: false,
+			items: ['数据库', '编译原理', '操作系统', '计算机组成原理'],
 		}
 	},
 	created() {
@@ -219,6 +348,8 @@ export default {
 		submit(){
 			
 		},
+		
+
 
 	},
 	components: {
