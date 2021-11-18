@@ -38,44 +38,8 @@ const routes = [{
   {
     path: '/home',
     component: Home,
-<<<<<<< HEAD
     children: []
-=======
-    children: [
-      // willem:共有嵌套路由
-      {
-        // 嵌套路由path不加'/'
-        path: 'discussion',
-        name: 'discussion',
-        meta: {
-          text: '提问交流区'
-        },
-        component: () =>
-          import ('../views/Layouts/Discussion/Discussion.vue'),
-        children: [
-          {
-            path: '',
-            name: 'discussion-index',
-            meta: {
-              text: '问题列表'
-            },
-            component: () =>
-              import ('../views/Layouts/Discussion/DiscussionIndex.vue')
-          },
-          {
-            path: 'answers',
-            name: 'answers',
-            meta: {
-              text: '回答'
-            },
-            component: () =>
-              import ('../views/Layouts/Discussion/Answers.vue')
-          }
-        ]
 
-      },
-    ]
->>>>>>> 27ce06902f1a4234de7d08a19c1e24c8dd440a4f
   }
 ]
 let home = routes.find(item => item.path === '/home')
