@@ -42,13 +42,35 @@ const routes = [{
     children: [
       // willem:共有嵌套路由
       {
+        // 嵌套路由path不加'/'
         path: 'discussion',
         name: 'discussion',
         meta: {
           text: '提问交流区'
         },
         component: () =>
-          import ('../views/Layouts/Discussion/Discussion.vue')
+          import ('../views/Layouts/Discussion/Discussion.vue'),
+        children: [
+          {
+            path: '',
+            name: 'discussion-index',
+            meta: {
+              text: '问题列表'
+            },
+            component: () =>
+              import ('../views/Layouts/Discussion/DiscussionIndex.vue')
+          },
+          {
+            path: 'answers',
+            name: 'answers',
+            meta: {
+              text: '回答'
+            },
+            component: () =>
+              import ('../views/Layouts/Discussion/Answers.vue')
+          }
+        ]
+
       },
     ]
   }
