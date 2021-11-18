@@ -31,6 +31,15 @@ export let teacherData = [{
     component: () =>
       import ('../views/Pages/Teacher/EmResults.vue')
   },
+  {
+    path: 'discussion',
+    name: 'discussion',
+    meta: {
+      text: '提问交流区'
+    },
+    component: () =>
+      import ('../views/Layouts/Discussion/Discussion.vue')
+  },
 ]
 
 export let studentData = [{
@@ -54,5 +63,14 @@ export let studentData = [{
     },
     component: () =>
       import ('../views/Pages/Student/EmSubjects.vue')
+  },
+  {
+    path: 'discussion',
+    name: 'discussion',
+    meta: {
+      text: '提问交流区'
+    },
+    component: () =>
+      import ('../views/Layouts/Discussion/Discussion.vue')
   },
 ]

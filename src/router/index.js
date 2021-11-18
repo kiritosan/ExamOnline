@@ -37,37 +37,30 @@ const routes = [{
   },
   {
     path: '/home',
-    name: 'home',
     component: Home,
-    children: [
-      // willem:共有嵌套路由
-      {
-        path: 'discussion',
-        name: 'discussion',
-        meta: {
-          text: '提问交流区'
-        },
-        component: () =>
-          import ('../views/Layouts/Discussion/Discussion.vue')
-      },
-    ]
+    children: []
   }
 ]
-let home = routes.find(item => item.name === 'home')
+let home = routes.find(item => item.path === '/home')
 
 // 动态加载路由
 teacherData.forEach(item => {
   home.children.push(item)
 })
+
 studentData.forEach(item => {
-  home.children.push(item)
+  // 避免路由重复
+  let flag = false
+  home.children.forEach(route => {
+    if (route.name === item.name) return flag = true
+  })
+  if (!flag) home.children.push(item)
 })
 
 const router = new VueRouter({
   routes,
-  mode: 'history',
+  // mode: 'history',
 })
-
 
 // 全局路由守卫, 路由跳转没有token直接跳转回login
 router.beforeEach((to, from, next) => {

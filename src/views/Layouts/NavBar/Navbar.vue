@@ -177,6 +177,7 @@ import {
 	getAllTeacherCanTeach,
 } from '@/api/Info'
 import { getUserAccount } from '@/api/Login'
+
 export default {
 	name: 'NavBar',
 	components: {
@@ -236,6 +237,8 @@ export default {
 			})
 			.then((res) => {
 				this.desserts = res.data
+				if (this.account[0] === 's') return
+				// 学生还没有选课功能，这里会报错
 				this.desserts.forEach((item) => {
 					this.$set(item, 'disabled', false)
 				})
@@ -255,13 +258,6 @@ export default {
 				})
 			}
 		})
-		
-		// willem:给学生和老师添加discussion导航项目
-		this.links.push({
-			text: '提问交流区',
-			route: '/home/discussion',
-			icon: 'mdi-steam',
-		})
 	},
 
 	methods: {
@@ -275,7 +271,10 @@ export default {
 			})
 		},
 
-		updateAvatar() {},
+		updateAvatar() {
+			// 更新头像
+		},
+
 		changeAvatar(data) {
 			// 修改头像
 			let img = this.$refs.input_img

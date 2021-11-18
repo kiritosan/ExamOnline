@@ -147,12 +147,13 @@
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
 												<!-- S 倒计时 -->
-												<v-toolbar-title>	
-													<count-down 
+												<v-toolbar-title>
+													<count-down
 														:submitPaper="submitPaper"
 														:item="item"
-														:questions="question"
-														:scores="scores"/>
+														:questions="questions"
+														:scores="scores"
+													/>
 												</v-toolbar-title>
 												<!-- E 倒计时 -->
 												<v-spacer></v-spacer>
@@ -218,10 +219,11 @@
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
 												<!-- S 倒计时 -->
-												<v-toolbar-title>	
-													<count-down 
+												<v-toolbar-title>
+													<count-down
 														:submitPaper="submitPaper"
-														:item="item"/>
+														:item="item"
+													/>
 												</v-toolbar-title>
 												<!-- E 倒计时 -->
 												<v-spacer></v-spacer>
@@ -329,7 +331,7 @@ import {
 } from '@/api/Paper'
 import { getUserAccount } from '@/api/Login'
 
-import CountDown from '../../Components/CountDown/CountDown.vue'
+import CountDown from '../../Layouts/CountDown/CountDown.vue'
 
 export default {
 	name: 'About',
@@ -478,11 +480,11 @@ export default {
 	background-color: tomato;
 }
 header.v-sheet.theme--dark.v-toolbar.primary {
-  position: fixed;
-  width: 100%;
-  z-index: 999;
+	position: fixed;
+	width: 100%;
+	z-index: 999;
 }
 .row.content {
-  padding-top: 56px;
+	padding-top: 56px;
 }
 </style>
