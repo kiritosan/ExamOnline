@@ -49,6 +49,7 @@ teacherData.forEach(item => {
   home.children.push(item)
 })
 
+
 studentData.forEach(item => {
   // 避免路由重复
   let flag = false
