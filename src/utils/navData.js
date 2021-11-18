@@ -38,7 +38,27 @@ export let teacherData = [{
       text: '提问交流区'
     },
     component: () =>
-      import ('../views/Layouts/Discussion/Discussion.vue')
+      import ('../views/Layouts/Discussion/Discussion.vue'),
+    children: [
+      {
+        path: '',
+        name: 'discussion-index',
+        meta: {
+          text: '问题列表'
+        },
+        component: () =>
+          import ('../views/Layouts/Discussion/DiscussionIndex.vue')
+      },
+      {
+        path: 'answers',
+        name: 'answers',
+        meta: {
+          text: '回答'
+        },
+        component: () =>
+          import ('../views/Layouts/Discussion/Answers.vue')
+      }
+    ]
   },
 ]
 
@@ -71,6 +91,26 @@ export let studentData = [{
       text: '提问交流区'
     },
     component: () =>
-      import ('../views/Layouts/Discussion/Discussion.vue')
+      import ('../views/Layouts/Discussion/Discussion.vue'),
+    children: [
+      {
+        path: '',
+        name: 'discussion-index',
+        meta: {
+          text: '问题列表'
+        },
+        component: () =>
+          import ('../views/Layouts/Discussion/DiscussionIndex.vue')
+      },
+      {
+        path: 'answers',
+        name: 'answers',
+        meta: {
+          text: '回答'
+        },
+        component: () =>
+          import ('../views/Layouts/Discussion/Answers.vue')
+      }
+    ]
   },
 ]
