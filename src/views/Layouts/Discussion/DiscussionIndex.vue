@@ -29,6 +29,7 @@
 					v-model="page"
 					:length="15"
 					:total-visible="7"
+					class="pb-2"
 				></v-pagination>
 			</div>
 		</v-card>
