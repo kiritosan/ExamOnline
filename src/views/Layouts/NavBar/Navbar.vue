@@ -84,7 +84,6 @@
 					</v-btn>
 				</template>
 				<v-list>
-					<!-- todo: router作用 -->
 					<v-list-item
 						v-for="link in links"
 						:key="link.route"
@@ -118,7 +117,6 @@
 									src="/images/avatar-1.jpg"
 									class="avatar"
 									title="更换头像"
-									@click="updateAvatar"
 									v-on="on"
 									v-bind="attr"
 								>
@@ -128,12 +126,13 @@
 					<v-card>
 						<v-card-title>更换头像</v-card-title>
 						<v-card-text>
-							<input
-								type="file"
-								accept="image/*"
-								ref="input_img"
-								@change="changeAvatar()"
-							>
+							<v-file-input
+								accept="image/png, image/jpeg, image/bmp"
+								placeholder="Pick an avatar"
+								prepend-icon="mdi-camera"
+								label="Avatar"
+								@change="changeAvatar"
+							></v-file-input>
 							<v-btn
 								class="success white--text mx-0"
 								@click="confirmChange"
@@ -177,7 +176,6 @@ import {
 	getAllTeacherCanTeach,
 } from '@/api/Info'
 import { getUserAccount } from '@/api/Login'
-
 export default {
 	name: 'NavBar',
 	components: {
@@ -225,23 +223,24 @@ export default {
 		requestsInfo[status]({
 			[status + 'num']: this.account,
 		})
-			.then((res) => {
-				this.coid = res.data.coid
-				this.name = res.data[status + 'name']
+			.then(({ data }) => {
+				this.coid = data.coid
+				this.name = data[status + 'name']
 				// 获取老师能教授的所有课表
-				return getAllTeacherCanTeach({
-					// todo: 接口参数只要求tnum
-					coid: this.coid,
-					tnum: this.account,
-				})
+				if (status === 't') {
+					return getAllTeacherCanTeach({
+						coid: this.coid,
+						tnum: this.account,
+					})
+				}
 			})
 			.then((res) => {
-				this.desserts = res.data
-				if (this.account[0] === 's') return
-				// 学生还没有选课功能，这里会报错
-				this.desserts.forEach((item) => {
-					this.$set(item, 'disabled', false)
-				})
+				if (res) {
+					this.desserts = res.data
+					this.desserts.forEach((item) => {
+						this.$set(item, 'disabled', false)
+					})
+				}
 			})
 
 		// 更新导航栏
@@ -250,14 +249,27 @@ export default {
 			s: studentData,
 		}
 		navLists[status].forEach((nav) => {
-			if (nav.name) {
-				this.links.push({
-					text: nav.meta.text,
-					route: '/home/' + nav.name,
-					icon: 'mdi-steam',
-				})
+			if (nav.path) {
+				// 如果有children怎么办？
+				if (nav.children) {
+					this.links.push({
+						text: nav.meta.text,
+						route: '/home/' + nav.path,
+						icon: 'mdi-steam',
+						children: nav.children.filter((item) => item.path),
+					})
+				} else {
+					this.links.push({
+						text: nav.meta.text,
+						route: '/home/' + nav.path,
+						icon: 'mdi-steam',
+					})
+				}
 			}
 		})
+
+		this.formData = new FormData()
+		this.formData.append('num', this.account)
 	},
 
 	methods: {
@@ -270,26 +282,23 @@ export default {
 				message: '注销成功',
 			})
 		},
-
-		updateAvatar() {
-			// 更新头像
-		},
-
 		changeAvatar(data) {
 			// 修改头像
-			let img = this.$refs.input_img
-			this.formData = new FormData()
-			if (img.files[0]) {
-				this.formData.append('qr_image', img.files[0])
-			}
+			this.formData.set('qr_image', data)
 		},
 
 		confirmChange() {
 			// 确认修改头像
-			uploadAvatar({
-				num: this.account,
-				file: this.formData,
-			}).then(() => {})
+			uploadAvatar(this.formData)
+				.then(({ data }) => {
+					console.log(data.msg)
+					return getAvatar({
+						num: this.account,
+					})
+				})
+				.then((res) => {
+					console.log(res)
+				})
 		},
 
 		// 老师一门门添加要选的课

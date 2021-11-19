@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import { getUserAccount } from '@/api/Login'
-
 export default {
 	data() {
 		return {

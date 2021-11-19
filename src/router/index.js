@@ -39,7 +39,6 @@ const routes = [{
     path: '/home',
     component: Home,
     children: []
-
   }
 ]
 let home = routes.find(item => item.path === '/home')
@@ -54,7 +53,7 @@ studentData.forEach(item => {
   // 避免路由重复
   let flag = false
   home.children.forEach(route => {
-    if (route.name === item.name) return flag = true
+    if (route.path === item.path) return flag = true
   })
   if (!flag) home.children.push(item)
 })

@@ -1,7 +1,6 @@
 <template>
 	<div class="about">
 		<v-container>
-			<!-- todo bug 老师页面 嵌套路由/home/emsubjects可以访问学生页面 -->
 			<v-expansion-panels>
 				<v-expansion-panel
 					v-for="(subject,index) in subjects"
@@ -178,10 +177,12 @@
 														<v-card-title>{{index+1}}. {{question.qcontent}}</v-card-title>
 														<v-radio
 															class="ml-2"
-															v-for="option in question.qanswer.split(';')[0].split('&')"
+															v-for="(option,index1) in question.qanswer.split(';')[0].split('&')"
 															:key="option[0]"
 															:label="option[0]+'. '+ option.split('=')[1]"
 															:value="option.split('=')[1]"
+															:ref="`radio${index}${index1}`"
+															:id="`radio${index}${index1}`"
 														></v-radio>
 													</v-radio-group>
 												</v-col>
@@ -219,12 +220,12 @@
 													<v-icon>mdi-close</v-icon>退出
 												</v-btn>
 												<!-- S 倒计时 -->
-												<v-toolbar-title>
-													<count-down
-														:submitPaper="submitPaper"
-														:item="item"
-													/>
-												</v-toolbar-title>
+												<count-down
+													:submitPaper="submitPaper"
+													:item="item"
+													:questions="questions"
+													:scores="scores"
+												/>
 												<!-- E 倒计时 -->
 												<v-spacer></v-spacer>
 												<v-toolbar-items>
@@ -248,10 +249,12 @@
 														<v-card-title>{{index+1}}. {{question.qcontent}}</v-card-title>
 														<v-radio
 															class="ml-2"
-															v-for="option in question.qanswer.split(';')[0].split('&')"
+															v-for="(option,index2) in question.qanswer.split(';')[0].split('&')"
 															:key="option[0]"
 															:label="option[0]+'. '+ option.split('=')[1]"
 															:value="option.split('=')[1]"
+															:ref="`radio${index}${index2}`"
+															:id="`radio${index}${index2}`"
 														></v-radio>
 													</v-radio-group>
 												</v-col>
@@ -299,11 +302,15 @@
 													>
 														<v-card-title>{{index+1}}. {{question.qcontent}}</v-card-title>
 														<v-radio
-															class="ml-2"
-															v-for="option in question.qanswer.split(';')[0].split('&')"
+															v-for="(option,index3) in question.qanswer.split(';')[0].split('&')"
 															:key="option[0]"
 															:label="option[0]+'. '+ option.split('=')[1]"
 															:value="option.split('=')[1]"
+															:class="{
+																'ml-2': true,
+																'wrong': rightEl.includes(`radio${index}${index3}`),
+																'right': rightEl.includes(`radio${index}${index3}`) && selectEl.includes(`radio${index}${index3}`)
+															}"
 														></v-radio>
 													</v-radio-group>
 												</v-col>
@@ -365,6 +372,9 @@ export default {
 			answer: false,
 			answerAgain: true,
 			scores: [], // 保存每一次的成绩
+
+			rightEl: [], // 正确的 radio
+			selectEl: [], // 选中的 radio
 		}
 	},
 	components: { CountDown },
@@ -442,9 +452,28 @@ export default {
 		},
 		submitPaper(item) {
 			let scoreNew = 0
-			this.questions.forEach((question) => {
-				scoreNew += question.point * Number(question.right === question.select)
-			})
+			const { questions, scores, selectEl, rightEl } = this
+
+			// 清空上一次的答题时的radio
+			selectEl.length = 0
+			rightEl.length = 0
+
+			for (let i = 0, len = this.questions.length; i < len; i++) {
+				const { right, select, point } = questions[i]
+				scoreNew += point * Number(select === right)
+
+				for (let j = 0, num = 4; j < num; j++) {
+					const radio = this.$refs[`radio${i}${j}`][0]
+					const { value } = radio.$options.propsData
+
+					if (value === select) selectEl.push(`radio${i}${j}`)
+					if (value === right) rightEl.push(`radio${i}${j}`)
+				}
+			}
+
+			// console.log(selectEl)
+			// console.log(rightEl)
+
 			if (item.hasOwnProperty('dialog1')) {
 				item.dialog1 = false
 			} else {
@@ -454,7 +483,7 @@ export default {
 				type: 'success',
 				message: '交卷成功',
 			})
-			this.scores.push(scoreNew)
+			scores.push(scoreNew)
 		},
 	},
 }
@@ -486,5 +515,13 @@ header.v-sheet.theme--dark.v-toolbar.primary {
 }
 .row.content {
 	padding-top: 56px;
+}
+.wrong {
+	width: fit-content;
+	background-color: tomato;
+}
+.right {
+	width: fit-content;
+	background-color: #3cd1c2;
 }
 </style>

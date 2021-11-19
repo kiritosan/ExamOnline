@@ -33,15 +33,17 @@ export let teacherData = [{
   },
   {
     path: 'discussion',
-    name: 'discussion',
     meta: {
-      text: '提问交流区'
+      text: '提问交流'
     },
     component: () =>
       import ('../views/Layouts/Discussion/Discussion.vue'),
-    children: [
-      {
+    children: [{
         path: '',
+        redirect: 'discussion-index'
+      },
+      {
+        path: 'discussion-index',
         name: 'discussion-index',
         meta: {
           text: '问题列表'
@@ -92,8 +94,7 @@ export let studentData = [{
     },
     component: () =>
       import ('../views/Layouts/Discussion/Discussion.vue'),
-    children: [
-      {
+    children: [{
         path: '',
         name: 'discussion-index',
         meta: {
